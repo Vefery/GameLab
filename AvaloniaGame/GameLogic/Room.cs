@@ -15,20 +15,6 @@ namespace AvaloniaGame.GameLogic
         public Room? left, right, up, down;
         private bool leftAllowed = true, rightAllowed = true, upAllowed = true, downAllowed = true;
         private Random rand = new Random();
-        public override void Awake()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Start()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update()
-        {
-            throw new NotImplementedException();
-        }
 
         public void Generate(Maze maze)
         {
@@ -63,7 +49,7 @@ namespace AvaloniaGame.GameLogic
             if (maze.depth <= 0 && !maze.goalSpawned)
             {
                 maze.goalSpawned = true;
-                maze.target = Instantiate(maze.targetPrefab, this.position, Quaternion.Identity).transform;
+                //maze.target = Instantiate(maze.targetPrefab, this.position, Quaternion.Identity).transform;
             }
         }
         private void GenerationLoop(Maze maze)
@@ -74,7 +60,7 @@ namespace AvaloniaGame.GameLogic
                 leftAllowed = maze.CheckPosition(this.position + new Vector3(-halfWidth, 0, 0)) && left == null;
                 if (rand.NextDouble() <= neighbourChance && leftAllowed)
                 {
-                    left = Instantiate(maze.roomPrefab, this.position + new Vector3(-halfWidth, 0, 0), Quaternion.Identity).GetComponent<Room>();
+                    //left = Instantiate(maze.roomPrefab, this.position + new Vector3(-halfWidth, 0, 0), Quaternion.Identity).GetComponent<Room>();
                     maze.tilePositions.Add(this.position + new Vector3(-halfWidth, 0, 0));
                     maze.roomsCreateActions.Add(() => left.GenerateRooms(maze, this, MazeDirection.right));
                     roomsGenerated++;
@@ -82,7 +68,7 @@ namespace AvaloniaGame.GameLogic
                 rightAllowed = maze.CheckPosition(this.position + new Vector3(halfWidth, 0, 0)) && right == null;
                 if (rand.NextDouble() <= neighbourChance && rightAllowed)
                 {
-                    right = Instantiate(maze.roomPrefab, this.position + new Vector3(halfWidth, 0, 0), Quaternion.Identity).GetComponent<Room>();
+                    //right = Instantiate(maze.roomPrefab, this.position + new Vector3(halfWidth, 0, 0), Quaternion.Identity).GetComponent<Room>();
                     maze.tilePositions.Add(this.position + new Vector3(halfWidth, 0, 0));
                     maze.roomsCreateActions.Add(() => right.GenerateRooms(maze, this, MazeDirection.left));
                     roomsGenerated++;
@@ -90,7 +76,7 @@ namespace AvaloniaGame.GameLogic
                 upAllowed = maze.CheckPosition(this.position + new Vector3(0, 0, halfWidth)) && up == null;
                 if (rand.NextDouble() <= neighbourChance && upAllowed)
                 {
-                    up = Instantiate(maze.roomPrefab, this.position + new Vector3(0, 0, halfWidth), Quaternion.Identity).GetComponent<Room>();
+                    //up = Instantiate(maze.roomPrefab, this.position + new Vector3(0, 0, halfWidth), Quaternion.Identity).GetComponent<Room>();
                     maze.tilePositions.Add(this.position + new Vector3(0, 0, halfWidth));
                     maze.roomsCreateActions.Add(() => up.GenerateRooms(maze, this, MazeDirection.down));
                     roomsGenerated++;
@@ -98,21 +84,21 @@ namespace AvaloniaGame.GameLogic
                 downAllowed = maze.CheckPosition(this.position + new Vector3(0, 0, -halfWidth)) && down == null;
                 if (rand.NextDouble() <= neighbourChance && downAllowed)
                 {
-                    down = Instantiate(maze.roomPrefab, this.position + new Vector3(0, 0, -halfWidth), Quaternion.Identity).GetComponent<Room>();
+                    //down = Instantiate(maze.roomPrefab, this.position + new Vector3(0, 0, -halfWidth), Quaternion.Identity).GetComponent<Room>();
                     maze.tilePositions.Add(this.position + new Vector3(0, 0, -halfWidth));
                     maze.roomsCreateActions.Add(() => down.GenerateRooms(maze, this, MazeDirection.up));
                     roomsGenerated++;
                 }
             }
 
-            if (left == null)
+            /*if (left == null)
                 Instantiate(maze.wallPrefab, this.position, Quaternion.Identity);
             if (right == null)
                 Instantiate(maze.wallPrefab, this.position, Quaternion.CreateFromAxisAngle(Vector3.UnitY, 180));
             if (up == null)
                 Instantiate(maze.wallPrefab, this.position, Quaternion.CreateFromAxisAngle(Vector3.UnitY, 90));
             if (down == null)
-                Instantiate(maze.wallPrefab, this.position, Quaternion.CreateFromAxisAngle(Vector3.UnitY, -90));
+                Instantiate(maze.wallPrefab, this.position, Quaternion.CreateFromAxisAngle(Vector3.UnitY, -90));*/
         }
     }
 }

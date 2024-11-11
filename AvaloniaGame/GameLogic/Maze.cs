@@ -30,7 +30,7 @@ namespace AvaloniaGame.GameLogic
             startPose = Vector3.Zero;
             tilePositions.Add(startPose);
             initDepth = depth;
-            rooms.Add(Instantiate(roomPrefab, this.position).GetComponent<Room>());
+            //rooms.Add(Instantiate(roomPrefab, this.position).GetComponent<Room>());
         }
 
         public override void Start()
@@ -38,7 +38,7 @@ namespace AvaloniaGame.GameLogic
             GenerateMaze();
         }
 
-        public override void Update()
+        public override void Update(float deltaTime)
         {
             throw new NotImplementedException();
         }
@@ -53,7 +53,7 @@ namespace AvaloniaGame.GameLogic
             if (!goalSpawned)
             {
                 goalSpawned = true;
-                target = Instantiate(targetPrefab, rooms.Last().position, Quaternion.Identity).transform;
+                //target = Instantiate(targetPrefab, rooms.Last().position, Quaternion.Identity).transform;
             }
             roomsCreateActions.Clear();
         }
@@ -62,10 +62,10 @@ namespace AvaloniaGame.GameLogic
             depth = initDepth;
             goalSpawned = false;
             tilePositions.Clear();
-            foreach (Room room in rooms)
-                Destroy(room.gameObject);
+            /*foreach (Room room in rooms)
+                Destroy(room.gameObject);*/
             rooms.Clear();
-            rooms.Add(Instantiate(roomPrefab).GetComponent<Room>());
+            //rooms.Add(Instantiate(roomPrefab).GetComponent<Room>());
             tilePositions.Add(rooms[0].position);
             GenerateMaze();
         }

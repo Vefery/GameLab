@@ -11,9 +11,9 @@ namespace AvaloniaGame.GameLogic
     {
         public Vector3 position;
 
-        public abstract void Awake();
-        public abstract void Start();
-        public abstract void Update();
+        public virtual void Awake() { }
+        public virtual void Start() { }
+        public virtual void Update(float deltaTime) { }
 
         public GameObject()
         {
