@@ -1,9 +1,11 @@
-﻿using Avalonia;
+﻿using System.Runtime.InteropServices.Marshalling;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-
+using AvaloniaGame.GameLogic;
 using AvaloniaGame.ViewModels;
 using AvaloniaGame.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AvaloniaGame;
 
@@ -15,8 +17,7 @@ public partial class App : Application
     }
 
     public override void OnFrameworkInitializationCompleted()
-    {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+    {        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow
             {

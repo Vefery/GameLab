@@ -1,34 +1,42 @@
-﻿using Avalonia.OpenGL.Controls;
+﻿using Avalonia.OpenGL;
+using Avalonia.OpenGL.Controls;
 using AvaloniaGame.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AvaloniaGame.GameLogic
 {
-    public class MainLogicLoop
+    public static class MainLogic
     {
         public static event Action? OnAwakeGlobal;
         public static event Action? OnStartGlobal;
         public static event Action<float>? OnUpdateGlobal;
 
         private const int frameRate = 60; // Target frame rate
-        private readonly TimeSpan FrameTime = TimeSpan.FromSeconds(1.0 / frameRate);
-        private DateTime _lastUpdateTime;
-        private OpenGLClass _glControl;
+        private static readonly TimeSpan FrameTime = TimeSpan.FromSeconds(1.0 / frameRate);
+        private static DateTime _lastUpdateTime;
+        private static OpenGLClass _glControl;
+        private static List<GameObject> gameObjects = [];
+        private static List<GameObject> renderables = [];
 
-        public MainLogicLoop(OpenGLClass glControl)
+        public static void StartWork(OpenGLClass glControl)
         {
             _glControl = glControl;
+
+            gameObjects.Add(new Maze());
+
             OnAwakeGlobal?.Invoke();
             OnStartGlobal?.Invoke();
 
+            renderables = gameObjects.Where(o => o is IRenderable).ToList();
+
             GameLoop();
         }
-
-        async void GameLoop()
+        async static void GameLoop()
         {
             _lastUpdateTime = DateTime.Now;
 

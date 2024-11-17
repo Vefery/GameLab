@@ -9,7 +9,6 @@ namespace AvaloniaGame.Views;
 public partial class MainView : UserControl
 {
     private OpenGLClass? _glControl;
-    private MainLogicLoop mainGameLogic;
     public MainView()
     {
         // Типа точка входа наша. Тут инициализируем OpenGL и создаем объект, который всей логикой занимается
@@ -22,6 +21,7 @@ public partial class MainView : UserControl
             Debug.WriteLine("Couldn't initialize OpenGL");
             Environment.Exit(-1);
         }
-        mainGameLogic = new(_glControl);
+        //mainGameLogic = new(_glControl);
+        MainLogic.StartWork(_glControl);
     }
 }

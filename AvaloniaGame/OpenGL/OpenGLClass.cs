@@ -12,22 +12,25 @@ namespace AvaloniaGame.OpenGL
         {
             base.OnOpenGlInit(gl);
         }
-        // Данил рендерить тута
+        
         protected override void OnOpenGlRender(GlInterface gl, int fb)
         {
             if (!shouldRender)
                 return;
             shouldRender = false; // Не трогать, важный костыль
 
-            gl.ClearColor(0f, 0f, 0f, 1f);
             gl.Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         }
 
+        // Данил рендерить тута
+        private void RenderObject(GlInterface gl, Mesh mesh)
+        {
+
+        }
         public void RenderFrame()
         {
             shouldRender = true;
-            this.RequestNextFrameRendering();
+            RequestNextFrameRendering();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace AvaloniaGame.GameLogic
     public abstract class GameObject
     {
         public Vector3 position;
+        public Vector3 eulerRotation;
 
         public virtual void Awake() { }
         public virtual void Start() { }
@@ -17,16 +18,18 @@ namespace AvaloniaGame.GameLogic
 
         public GameObject()
         {
-            MainLogicLoop.OnAwakeGlobal += Awake;
-            MainLogicLoop.OnStartGlobal += Start;
-            MainLogicLoop.OnUpdateGlobal += Update;
+            eulerRotation = Vector3.Zero;
+            MainLogic.OnAwakeGlobal += Awake;
+            MainLogic.OnStartGlobal += Start;
+            MainLogic.OnUpdateGlobal += Update;
         }
         public GameObject(Vector3 position)
         {
+            eulerRotation = Vector3.Zero;
             this.position = position;
-            MainLogicLoop.OnAwakeGlobal += Awake;
-            MainLogicLoop.OnStartGlobal += Start;
-            MainLogicLoop.OnUpdateGlobal += Update;
+            MainLogic.OnAwakeGlobal += Awake;
+            MainLogic.OnStartGlobal += Start;
+            MainLogic.OnUpdateGlobal += Update;
         }
     }
 }

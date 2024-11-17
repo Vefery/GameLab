@@ -17,30 +17,23 @@ namespace AvaloniaGame.GameLogic
         public Vector3 target;
         public int depth = 10;
         public bool goalSpawned = false;
-        public GameObject roomPrefab, wallPrefab, targetPrefab;
         public Vector3 startPose;
         public List<Vector3> tilePositions = new();
         public List<Room> rooms = new();
         private int initDepth;
         public List<Action> roomsCreateActions = new();
-        public int roomsCount { get { return rooms.Count; } }
 
         public override void Awake()
         {
             startPose = Vector3.Zero;
             tilePositions.Add(startPose);
             initDepth = depth;
-            //rooms.Add(Instantiate(roomPrefab, this.position).GetComponent<Room>());
+            //rooms.Add(MainLogic.Instantiate<Room>(position));
         }
 
         public override void Start()
         {
-            GenerateMaze();
-        }
-
-        public override void Update(float deltaTime)
-        {
-            throw new NotImplementedException();
+            //GenerateMaze();
         }
 
         public void GenerateMaze()

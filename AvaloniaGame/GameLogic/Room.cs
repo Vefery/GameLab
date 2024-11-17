@@ -1,4 +1,6 @@
 ﻿using Avalonia.Media;
+using Avalonia.OpenGL;
+using AvaloniaGame.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace AvaloniaGame.GameLogic
         public float neighbourChance = 0.25f;
         public Room? left, right, up, down;
         private bool leftAllowed = true, rightAllowed = true, upAllowed = true, downAllowed = true;
-        private Random rand = new Random();
+        private Random rand = new();
 
         public void Generate(Maze maze)
         {
@@ -52,6 +54,12 @@ namespace AvaloniaGame.GameLogic
                 //maze.target = Instantiate(maze.targetPrefab, this.position, Quaternion.Identity).transform;
             }
         }
+
+        public void Render(GlInterface gl)
+        {
+            throw new NotImplementedException();
+        }
+
         private void GenerationLoop(Maze maze)
         {
             int roomsGenerated = 0;
