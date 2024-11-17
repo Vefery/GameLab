@@ -56,5 +56,21 @@ namespace AvaloniaGame.GameLogic
                 await Task.Delay(1);
             }
         }
+        public static T Instantiate<T>(Vector3 position, Vector3 rotation) where T : GameObject, new()
+        {
+            T newObject = new();
+            newObject.position = position;
+            newObject.eulerRotation = rotation;
+            gameObjects.Add(newObject);
+            return newObject;
+        }
+        public static T Instantiate<T>(Vector3 position) where T : GameObject, new()
+        {
+            T newObject = new();
+            newObject.position = position;
+            newObject.eulerRotation = Vector3.Zero;
+            gameObjects.Add(newObject);
+            return newObject;
+        }
     }
 }

@@ -11,10 +11,8 @@ namespace AvaloniaGame.GameLogic
     public class FloorPrefab : GameObject, IRenderable
     {
         public Mesh mesh { get; private set; }
-        public FloorPrefab(Vector3 position, Vector3 rotation)
+        public FloorPrefab()
         {
-            this.position = position;
-            this.eulerRotation = rotation;
             mesh = ObjReader.ReadObjFile("avares://AvaloniaGame/Assets/Floor.obj");
         }
     }

@@ -14,10 +14,8 @@ namespace AvaloniaGame.GameLogic
     public class WallPrefab : GameObject, IRenderable
     {
         public Mesh mesh {  get; private set; }
-        public WallPrefab(Vector3 position, Vector3 rotation)
+        public WallPrefab()
         {
-            this.position = position;
-            this.eulerRotation = rotation;
             mesh = ObjReader.ReadObjFile("avares://AvaloniaGame/Assets/Wall.obj");
         }
     }

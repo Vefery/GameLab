@@ -28,7 +28,7 @@ namespace AvaloniaGame.GameLogic
             startPose = Vector3.Zero;
             tilePositions.Add(startPose);
             initDepth = depth;
-            //rooms.Add(MainLogic.Instantiate<Room>(position));
+            rooms.Add(MainLogic.Instantiate<Room>(position));
         }
 
         public override void Start()
@@ -58,7 +58,7 @@ namespace AvaloniaGame.GameLogic
             /*foreach (Room room in rooms)
                 Destroy(room.gameObject);*/
             rooms.Clear();
-            //rooms.Add(Instantiate(roomPrefab).GetComponent<Room>());
+            rooms.Add(MainLogic.Instantiate<Room>(position));
             tilePositions.Add(rooms[0].position);
             GenerateMaze();
         }
