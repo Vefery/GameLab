@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Platform;
@@ -11,21 +12,9 @@ namespace AvaloniaGame.OpenGL
 {
     public class ObjReader
     {
-        public struct Vertex
-        {
-            public float x;
-            public float y;
-            public float z;
-        }
-
         public struct Face
         {
             public int[] VertexIndices;
-        }
-        public struct TextureCoordinate
-        {
-            public float u;
-            public float v;
         }
         public static Mesh ReadObjFile(string filePath)
         {
@@ -42,19 +31,24 @@ namespace AvaloniaGame.OpenGL
                     switch (parts[0])
                     {
                         case "v":
-                            newMesh.vertices.Add(new Vertex
-                            {
-                                x = float.Parse(parts[1], NumberStyles.Any, ci),
-                                y = float.Parse(parts[2], NumberStyles.Any, ci),
-                                z = float.Parse(parts[3], NumberStyles.Any, ci)
-                            });
+                            newMesh.vertices.Add(new Vector3(
+                                float.Parse(parts[1], NumberStyles.Any, ci),
+                                float.Parse(parts[2], NumberStyles.Any, ci),
+                                float.Parse(parts[3], NumberStyles.Any, ci)
+                            ));
+                            break;
+                        case "vn":
+                            newMesh.normals.Add(new Vector3(
+                                float.Parse(parts[1], NumberStyles.Any, ci),
+                                float.Parse(parts[2], NumberStyles.Any, ci),
+                                float.Parse(parts[3], NumberStyles.Any, ci)
+                            ));
                             break;
                         case "vt":
-                            newMesh.textureCoordinates.Add(new TextureCoordinate
-                            {
-                                u = float.Parse(parts[1], NumberStyles.Any, ci),
-                                v = float.Parse(parts[2], NumberStyles.Any, ci)
-                            });
+                            newMesh.textureCoordinates.Add(new Vector2(
+                                float.Parse(parts[1], NumberStyles.Any, ci),
+                                float.Parse(parts[2], NumberStyles.Any, ci)
+                            ));
                             break;
                         case "f":
                             newMesh.faces.Add(new Face

@@ -20,8 +20,8 @@ namespace AvaloniaGame.GameLogic
         private static readonly TimeSpan FrameTime = TimeSpan.FromSeconds(1.0 / frameRate);
         private static DateTime _lastUpdateTime;
         private static OpenGLClass _glControl;
-        private static List<GameObject> gameObjects = [];
-        private static List<GameObject> renderables = [];
+        public static List<GameObject> gameObjects = [];
+        public static List<GameObject> renderables = [];
 
         public static void StartWork(OpenGLClass glControl)
         {
@@ -33,6 +33,7 @@ namespace AvaloniaGame.GameLogic
             OnStartGlobal?.Invoke();
 
             renderables = gameObjects.Where(o => o is IRenderable).ToList();
+            //colliders = gameObjects.Where(o => o is ICollider).ToList();
 
             GameLoop();
         }
