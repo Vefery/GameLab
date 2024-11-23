@@ -9,6 +9,12 @@ namespace AvaloniaGame.OpenGL
     public class OpenGLClass : OpenGlControlBase
     {
         private bool shouldRender = false;
+        private String VertexShader = "";
+        private String FragmentShader = "";
+        private bool LoadShader(String shaderName)
+        {
+            return true;
+        }
         protected override void OnOpenGlInit(GlInterface gl)
         {
             base.OnOpenGlInit(gl);
@@ -20,6 +26,8 @@ namespace AvaloniaGame.OpenGL
                 return;
             shouldRender = false; // Не трогать, важный костыль
 
+            RenderObject(gl, null);
+
             foreach (IRenderable obj in MainLogic.renderables)
                 RenderObject(gl, obj.mesh);
 
@@ -29,6 +37,7 @@ namespace AvaloniaGame.OpenGL
         // Данил рендерить тута
         private void RenderObject(GlInterface gl, Mesh mesh)
         {
+            gl.ClearColor(0.5f, 0.5f,0.5f, 1.0f);
             
         }
         public void RenderFrame()
