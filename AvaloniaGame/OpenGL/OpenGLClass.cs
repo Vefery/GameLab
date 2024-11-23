@@ -1,5 +1,6 @@
 ﻿using Avalonia.OpenGL;
 using Avalonia.OpenGL.Controls;
+using AvaloniaGame.GameLogic;
 using System;
 using static Avalonia.OpenGL.GlConsts;
 
@@ -19,13 +20,16 @@ namespace AvaloniaGame.OpenGL
                 return;
             shouldRender = false; // Не трогать, важный костыль
 
+            foreach (IRenderable obj in MainLogic.renderables)
+                RenderObject(gl, obj.mesh);
+
             gl.Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
 
         // Данил рендерить тута
         private void RenderObject(GlInterface gl, Mesh mesh)
         {
-
+            
         }
         public void RenderFrame()
         {
