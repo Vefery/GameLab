@@ -21,7 +21,7 @@ namespace AvaloniaGame.OpenGL
             CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
             ci.NumberFormat.CurrencyDecimalSeparator = ".";
             Mesh newMesh = new Mesh();
-            using (var reader = new StreamReader(AssetLoader.Open(new Uri("avares://AvaloniaGame/Assets/Wall.obj"))))
+            using (var reader = new StreamReader(AssetLoader.Open(new Uri(filePath))))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)

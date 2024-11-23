@@ -16,7 +16,7 @@ namespace AvaloniaGame.GameLogic
         public Mesh mesh {  get; private set; }
         public WallPrefab()
         {
-            mesh = ObjReader.ReadObjFile("avares://AvaloniaGame/Assets/Wall.obj");
+            mesh = ObjReader.ReadObjFile("avares://AvaloniaGame/Assets/Wall.model");
         }
     }
 }
