@@ -12,6 +12,8 @@ class MainWindow : GameWindow
     private Camera _camera;
     private double _lastFrameTime;
 
+    public static string assetsPath = AppDomain.CurrentDomain.BaseDirectory + "\\..\\..\\..\\Assets\\";
+
     private Matrix4 projectionMatrix, viewMatrix, modelMatrix;
 
     public MainWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
@@ -25,11 +27,11 @@ class MainWindow : GameWindow
         GL.Enable(EnableCap.DepthTest);
 
         // Загрузка шейдера
-        _shaderProgram = new ShaderProgram("C:\\Users\\Asus Tuf\\source\\repos\\MazeGame\\MazeGame\\Shaders\\Vertex.glsl", "C:\\Users\\Asus Tuf\\source\\repos\\MazeGame\\MazeGame\\Shaders\\Fragment.glsl");
+        _shaderProgram = new ShaderProgram(assetsPath + "Shaders\\Vertex.glsl", assetsPath + "Shaders\\Fragment.glsl");
 
         // Загрузка объектов
-        _cube = new Mesh("C:\\Users\\Asus Tuf\\source\\repos\\MazeGame\\MazeGame\\Models\\Cube.model");
-        _sphere = new Mesh("C:\\Users\\Asus Tuf\\source\\repos\\MazeGame\\MazeGame\\Models\\Sphere.model");
+        _cube = new Mesh(assetsPath + "Models\\Cube.model");
+        _sphere = new Mesh(assetsPath + "Models\\Sphere.model");
 
         // Инициализация камеры
         _camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), new Vector3(0.0f, 1.0f, 0.0f));
@@ -116,6 +118,7 @@ class MainWindow : GameWindow
 
     public static void Main(string[] args)
     {
+        var t = AppDomain.CurrentDomain.BaseDirectory + "/Assets/Models";
         var gameWindowSettings = new GameWindowSettings
         {
             //RenderFrequency = 60.0,
@@ -124,7 +127,7 @@ class MainWindow : GameWindow
 
         var nativeWindowSettings = new NativeWindowSettings
         {
-            Size = new Vector2i(1280, 720),
+            ClientSize = new Vector2i(1280, 720),
             Title = "3D Scene with OpenTK"
         };
 
