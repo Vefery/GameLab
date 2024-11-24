@@ -13,7 +13,6 @@ namespace MazeGame.GameLogic
         public static void InitializeScene()
         {
             gameObjects.Add(new Maze());
-            //Instantiate<Room>(Vector3.Zero);
         }
         public static void CallUpdate(float deltaTime)
         {
@@ -26,6 +25,7 @@ namespace MazeGame.GameLogic
             newObject.position = position;
             newObject.eulerRotation = rotation;
             gameObjects.Add(newObject);
+            newObject.Start();
             return newObject;
         }
         public static T Instantiate<T>(Vector3 position) where T : GameObject, new()
@@ -34,6 +34,7 @@ namespace MazeGame.GameLogic
             newObject.position = position;
             newObject.eulerRotation = Vector3.Zero;
             gameObjects.Add(newObject);
+            newObject.Start();
             return newObject;
         }
     }

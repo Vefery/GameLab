@@ -6,6 +6,6 @@ namespace MazeGame.GameLogic
     {
         Mesh mesh { get; }
         public Vector3 position { get; }
-        public Vector3 eulerRotation { get; }
+        public Vector3 radianRotation { get; }
     }
 }

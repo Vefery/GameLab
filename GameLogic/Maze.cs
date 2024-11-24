@@ -9,7 +9,7 @@ namespace MazeGame.GameLogic
     public class Maze : GameObject
     {
         public Vector3 target;
-        public int depth = 10;
+        public int depth = 50;
         public bool goalSpawned = false;
         public Vector3 startPose;
         public List<Vector3> tilePositions = new();

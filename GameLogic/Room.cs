@@ -4,13 +4,13 @@ namespace MazeGame.GameLogic
 {
     public class Room : GameObject
     {
-        public float halfWidth = 2.5f;
+        public float halfWidth = 5f;
         public float neighbourChance = 0.25f;
         public Room? left, right, up, down;
         private bool leftAllowed = true, rightAllowed = true, upAllowed = true, downAllowed = true;
         private Random rand = new();
 
-        public Room()
+        public override void Start()
         {
             MainLogic.Instantiate<FloorPrefab>(position);
         }

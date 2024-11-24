@@ -2,6 +2,7 @@
 using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
+using OpenTK.Input;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using MazeGame.Utils;
 using MazeGame.GameLogic;
@@ -22,6 +23,8 @@ class MainWindow : GameWindow
     {
         base.OnLoad();
 
+        CursorState = CursorState.Grabbed;
+
         InitializeGraphics();
         MainLogic.InitializeScene();
     }
@@ -33,10 +36,6 @@ class MainWindow : GameWindow
 
         // Загрузка шейдера
         _shaderProgram = new ShaderProgram(assetsPath + "Shaders\\Vertex.glsl", assetsPath + "Shaders\\Fragment.glsl");
-
-        // Загрузка объектов
-        _cube = new Mesh(assetsPath + "Models\\Cube.model");
-        _sphere = new Mesh(assetsPath + "Models\\Sphere.model");
 
         // Инициализация камеры
         _camera = new Camera(new Vector3(0.0f, 5.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.0f));
@@ -70,18 +69,19 @@ class MainWindow : GameWindow
         _shaderProgram.SetUniform("projection", projectionMatrix);
 
         foreach (var obj in MainLogic.renderables)
-            DrawObject(obj.mesh, obj.position, obj.eulerRotation, Vector3.One);
+            DrawObject(obj.mesh, obj.position, obj.radianRotation, Vector3.One);
 
         SwapBuffers();
     }
     private void DrawObject(Mesh mesh, Vector3 position, Vector3 eulerRotation, Vector3 scale)
     {
         modelMatrix = Matrix4.Identity;
-        modelMatrix = modelMatrix * Matrix4.CreateTranslation(position);
-        modelMatrix = modelMatrix * Matrix4.CreateScale(scale);
         modelMatrix = modelMatrix * Matrix4.CreateRotationX(eulerRotation.X);
         modelMatrix = modelMatrix * Matrix4.CreateRotationY(eulerRotation.Y);
         modelMatrix = modelMatrix * Matrix4.CreateRotationZ(eulerRotation.Z);
+        modelMatrix = modelMatrix * Matrix4.CreateTranslation(position);
+        modelMatrix = modelMatrix * Matrix4.CreateScale(scale);
+
 
         _shaderProgram.SetUniform("model", modelMatrix);
         mesh.draw();
@@ -116,7 +116,7 @@ class MainWindow : GameWindow
             //RenderFrequency = 60.0,
             UpdateFrequency = frameRate
         };
-
+        
         var nativeWindowSettings = new NativeWindowSettings
         {
             ClientSize = new Vector2i(1280, 720),
