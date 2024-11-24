@@ -1,9 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 
 public class Mesh
 {

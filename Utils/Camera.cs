@@ -1,11 +1,10 @@
-﻿using OpenTK.Mathematics;
+﻿using MazeGame.GameLogic;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 
-public class Camera
+public class Camera : GameObject
 {
-
-    private Vector3 position;
     private Vector3 front;
     private Vector3 up;
     private Vector3 right;
@@ -24,8 +23,21 @@ public class Camera
         up = Vector3.Normalize(Vector3.Cross(right, front));
     }
 
+    public override void Update(float deltaTime)
+    {
+        // Обновление логики камеры
+        var keyboard = MainLogic.keyboardState;
 
-    public void processKeyboard(Keys key, float deltaTime)
+        if (keyboard.IsKeyDown(Keys.W))
+            ProcessKeyboard(Keys.W, deltaTime);
+        if (keyboard.IsKeyDown(Keys.S))
+            ProcessKeyboard(Keys.S, deltaTime);
+        if (keyboard.IsKeyDown(Keys.A))
+            ProcessKeyboard(Keys.A, deltaTime);
+        if (keyboard.IsKeyDown(Keys.D))
+            ProcessKeyboard(Keys.D, deltaTime);
+    }
+    public void ProcessKeyboard(Keys key, float deltaTime)
     {
         float velocity = movementSpeed * deltaTime;
 
@@ -73,7 +85,7 @@ public class Camera
         position = _position;
         worldUp = _up;
         front = new Vector3(0.0f, 0.0f, -1.0f);
-        movementSpeed = 0.05f;
+        movementSpeed = 5f;
         mouseSensetivity = 0.1f;
         fov = 90.0f;
 
