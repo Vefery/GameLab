@@ -17,17 +17,14 @@ namespace MazeGame.GameLogic
         private int initDepth;
         public List<Action> roomsCreateActions = new();
 
-        public override void Awake()
+        public Maze()
         {
             startPose = Vector3.Zero;
             tilePositions.Add(startPose);
             initDepth = depth;
             rooms.Add(MainLogic.Instantiate<Room>(position));
-        }
 
-        public override void Start()
-        {
-            //GenerateMaze();
+            GenerateMaze();
         }
 
         public void GenerateMaze()

@@ -5,26 +5,20 @@ namespace MazeGame.GameLogic
 {
     public static class MainLogic
     {
-        public static event Action? OnAwakeGlobal;
-        public static event Action? OnStartGlobal;
-        public static event Action<float>? OnUpdateGlobal;
-
         public static List<GameObject> gameObjects = [];
-        public static List<GameObject> renderables = [];
-        public static KeyboardState? keyboardState;
+        public static List<IRenderable> renderables { get { return gameObjects.OfType<IRenderable>().ToList(); } }
+        public static KeyboardState keyboardState;
+        public static MouseState mouseState;
 
         public static void InitializeScene()
         {
             gameObjects.Add(new Maze());
-
-            OnAwakeGlobal?.Invoke();
-            OnStartGlobal?.Invoke();
-
-            renderables = gameObjects.Where(o => o is IRenderable).ToList();
+            //Instantiate<Room>(Vector3.Zero);
         }
-        public static void RaiseUpdate(float deltaTime)
+        public static void CallUpdate(float deltaTime)
         {
-            OnUpdateGlobal?.Invoke(deltaTime);
+            foreach (var gameObject in gameObjects)
+                gameObject.Update(deltaTime);
         }
         public static T Instantiate<T>(Vector3 position, Vector3 rotation) where T : GameObject, new()
         {

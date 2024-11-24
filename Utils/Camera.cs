@@ -1,4 +1,5 @@
-﻿using MazeGame.GameLogic;
+﻿using System.Diagnostics;
+using MazeGame.GameLogic;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -13,6 +14,22 @@ public class Camera : GameObject
     private float movementSpeed;
     private float mouseSensetivity;
     private float fov;
+    private float pitch;
+    private float yaw;
+
+    public Camera(Vector3 _position, Vector3 _up)
+    {
+        position = _position;
+        worldUp = _up;
+        front = new Vector3(0.0f, 0.0f, -1.0f);
+        movementSpeed = 5f;
+        mouseSensetivity = 0.1f;
+        fov = 90.0f;
+        pitch = 0f;
+        yaw = -90f;
+
+        updateCameraVectors();
+    }
 
     private void updateCameraVectors()
     {
@@ -27,6 +44,9 @@ public class Camera : GameObject
     {
         // Обновление логики камеры
         var keyboard = MainLogic.keyboardState;
+        var mouse = MainLogic.mouseState;
+
+        processMouseMovement(mouse.Delta.X, mouse.Delta.Y);
 
         if (keyboard.IsKeyDown(Keys.W))
             ProcessKeyboard(Keys.W, deltaTime);
@@ -60,7 +80,7 @@ public class Camera : GameObject
     }
     public void processMouseMovement(float xoffset, float yoffset)
     {
-        xoffset *= mouseSensetivity;
+        /*xoffset *= mouseSensetivity;
         yoffset *= mouseSensetivity;
 
         // Создаем кватернионы для поворота вокруг осей Y и X
@@ -68,9 +88,24 @@ public class Camera : GameObject
         Quaternion pitchRotation = Quaternion.FromAxisAngle(right, yoffset);
 
         orientation = yawRotation * orientation * pitchRotation;
-        orientation = orientation.Normalized();
+        orientation = orientation.Normalized();*/
+        pitch -= yoffset * mouseSensetivity;
+        yaw += xoffset * mouseSensetivity;
 
-        updateCameraVectors();
+        if (pitch > 89.0f)
+            pitch = 89.0f;
+        if (pitch < -89.0f)
+            pitch = -89.0f;
+
+        front.X = (float)(Math.Cos(MathHelper.DegreesToRadians(yaw)) * Math.Cos(MathHelper.DegreesToRadians(pitch)));
+        front.Y = (float)Math.Sin(MathHelper.DegreesToRadians(pitch));
+        front.Z = (float)(Math.Sin(MathHelper.DegreesToRadians(yaw)) * Math.Cos(MathHelper.DegreesToRadians(pitch)));
+        front = front.Normalized();
+
+        right = Vector3.Cross(front, worldUp).Normalized();
+        up = Vector3.Cross(right, front).Normalized();
+
+        //updateCameraVectors();
     }
 
     public Matrix4 getProjectionMatrix(float aspectRatio)
@@ -78,18 +113,6 @@ public class Camera : GameObject
         Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(fov), aspectRatio, 0.1f, 300.0f);
 
         return projection;
-    }
-
-    public Camera(Vector3 _position, Vector3 _up)
-    {
-        position = _position;
-        worldUp = _up;
-        front = new Vector3(0.0f, 0.0f, -1.0f);
-        movementSpeed = 5f;
-        mouseSensetivity = 0.1f;
-        fov = 90.0f;
-
-        updateCameraVectors();
     }
 
     public Matrix4 GetMatrix()

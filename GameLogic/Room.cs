@@ -10,7 +10,7 @@ namespace MazeGame.GameLogic
         private bool leftAllowed = true, rightAllowed = true, upAllowed = true, downAllowed = true;
         private Random rand = new();
 
-        public override void Awake()
+        public Room()
         {
             MainLogic.Instantiate<FloorPrefab>(position);
         }

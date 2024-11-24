@@ -39,7 +39,7 @@ class MainWindow : GameWindow
         _sphere = new Mesh(assetsPath + "Models\\Sphere.model");
 
         // Инициализация камеры
-        _camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), new Vector3(0.0f, 1.0f, 0.0f));
+        _camera = new Camera(new Vector3(0.0f, 5.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.0f));
         MainLogic.gameObjects.Add(_camera);
 
         // Устанавливаем цвет очистки
@@ -69,22 +69,19 @@ class MainWindow : GameWindow
         _shaderProgram.SetUniform("view", viewMatrix);
         _shaderProgram.SetUniform("projection", projectionMatrix);
 
-
-        // Отрисовка объектов
-        DrawObject(_cube, new Vector3(0, 0, 0), new Vector3(1, 1, 1), 140, -55, 70);
-        //DrawObject(_pyramid, new Vector3(0, 0, 0), new Vector3(1, 1, 1));
-        DrawObject(_sphere, new Vector3(3, 0, 0), new Vector3(1.0f, 1.0f, 1.0f),0, 0, 0);
+        foreach (var obj in MainLogic.renderables)
+            DrawObject(obj.mesh, obj.position, obj.eulerRotation, Vector3.One);
 
         SwapBuffers();
     }
-    private void DrawObject(Mesh mesh, Vector3 position, Vector3 scale, float RotateX, float RotateY, float RotateZ)
+    private void DrawObject(Mesh mesh, Vector3 position, Vector3 eulerRotation, Vector3 scale)
     {
         modelMatrix = Matrix4.Identity;
         modelMatrix = modelMatrix * Matrix4.CreateTranslation(position);
         modelMatrix = modelMatrix * Matrix4.CreateScale(scale);
-        modelMatrix = modelMatrix * Matrix4.CreateRotationX(RotateX);
-        modelMatrix = modelMatrix * Matrix4.CreateRotationY(RotateY);
-        modelMatrix = modelMatrix * Matrix4.CreateRotationZ(RotateZ);
+        modelMatrix = modelMatrix * Matrix4.CreateRotationX(eulerRotation.X);
+        modelMatrix = modelMatrix * Matrix4.CreateRotationY(eulerRotation.Y);
+        modelMatrix = modelMatrix * Matrix4.CreateRotationZ(eulerRotation.Z);
 
         _shaderProgram.SetUniform("model", modelMatrix);
         mesh.draw();
@@ -96,7 +93,8 @@ class MainWindow : GameWindow
 
         // HandleCollision();
         MainLogic.keyboardState = KeyboardState;
-        MainLogic.RaiseUpdate((float)args.Time);
+        MainLogic.mouseState = MouseState;
+        MainLogic.CallUpdate((float)args.Time);
     }
 
     protected override void OnUnload()
@@ -121,7 +119,7 @@ class MainWindow : GameWindow
 
         var nativeWindowSettings = new NativeWindowSettings
         {
-            ClientSize = new Vector2i(720, 720),
+            ClientSize = new Vector2i(1280, 720),
             Title = "3D Scene with OpenTK"
         };
 
