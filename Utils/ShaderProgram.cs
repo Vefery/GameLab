@@ -64,12 +64,30 @@ namespace MazeGame.Utils
 
         public void SetUniform(string name, Spotlight light)
         {
-            SetUniform($"{name}.position", light.Position);
-            SetUniform($"{name}.direction", light.Direction);
-            SetUniform($"{name}.cutoff", light.Cutoff);
-            SetUniform($"{name}.ambient", light.Ambient);
-            SetUniform($"{name}.diffuse", light.Diffuse);
-            SetUniform($"{name}.specular", light.Specular);
+            /* main settings */
+            SetUniform($"{name}.position", light.position);
+            SetUniform($"{name}.direction", light.direction);
+            SetUniform($"{name}.cutoffAngle", light.cutoffAngle);
+            SetUniform($"{name}.outerCutoff", light.outerCutoff);
+            SetUniform($"{name}.intensity", light.intensity);
+
+            /* attenuation */
+            SetUniform($"{name}.constant", light.constant);
+            SetUniform($"{name}.linear", light.linear);
+            SetUniform($"{name}.quadratic", light.quadratic);
+
+            /* color of light */
+            SetUniform($"{name}.color", light.color);
+
+        }
+
+        public void SetUniform(string name, Material material)
+        {
+            SetUniform($"{name}.ambient", material.ambient);
+            SetUniform($"{name}.diffuse", material.diffuse);
+            SetUniform($"{name}.specular", material.specular);
+            SetUniform($"{name}.shininess", material.shininess);
+
         }
 
         public void SetUniform(string name, OpenTK.Mathematics.Vector3 vector)
@@ -77,16 +95,29 @@ namespace MazeGame.Utils
             int location = GL.GetUniformLocation(_programId, name);
             if (location == -1) throw new Exception($"Uniform '{name}' not found.");
             GL.Uniform3(location, vector);
+           
         }
     }
 
     public struct Spotlight
     {
-        public OpenTK.Mathematics.Vector3 Position;
-        public OpenTK.Mathematics.Vector3 Direction;
-        public float Cutoff;
-        public OpenTK.Mathematics.Vector3 Ambient;
-        public OpenTK.Mathematics.Vector3 Diffuse;
-        public OpenTK.Mathematics.Vector3 Specular;
+        public OpenTK.Mathematics.Vector3 position;
+        public OpenTK.Mathematics.Vector3 direction;
+        public float cutoffAngle;
+        public float outerCutoff;
+        public float intensity;
+        public float constant;
+        public float linear;
+        public float quadratic;
+        public OpenTK.Mathematics.Vector3 color;
+        
+    }
+
+    public struct Material
+    {
+        public OpenTK.Mathematics.Vector3 ambient;
+        public OpenTK.Mathematics.Vector3 diffuse;
+        public OpenTK.Mathematics.Vector3 specular;
+        public float shininess;
     }
 }

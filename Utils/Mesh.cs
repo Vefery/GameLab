@@ -49,12 +49,6 @@ public class Mesh
 
     private void LoadObj(string FileObj)
     {
-        //_vertices =
-        //[
-        //    0.0f,  0.5f, 0.0f, 0, 0, 0, 0, 0, // Вершина сверху
-        //    -0.5f, -0.5f, 0.0f,  0, 0, 0, 0, 0, // Левая вершина
-        //     0.5f, -0.5f, 0.0f,  0, 0, 0, 0, 0  // Правая вершина
-        //];
 
         using StreamReader reader = new StreamReader(FileObj);
         string line;

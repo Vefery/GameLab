@@ -6,7 +6,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 public class Camera : GameObject
 {
-    private Vector3 front;
+    public Vector3 front;
     private Vector3 up;
     private Vector3 right;
     private Vector3 worldUp;
