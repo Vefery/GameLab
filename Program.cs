@@ -49,7 +49,7 @@ class MainWindow : GameWindow
         MainLogic.gameObjects.Add(_camera);
 
         // Устанавливаем цвет очистки
-        GL.ClearColor(0.2f, 0.2f, 0.5f, 1.0f);
+        GL.ClearColor(0f, 0f, 0f, 1.0f);
     }
     protected override void OnResize(ResizeEventArgs e)
     {
@@ -93,14 +93,11 @@ class MainWindow : GameWindow
         norm_matrix.Transpose();
 
         /* Настройки параметров освещения */
-        _globalAmbient = new Vector3(0.7f, 0.7f, 0.7f);
-        _spotLightParam.position = new Vector3(0, 0, 0);
-        _spotLightParam.direction = new Vector3(viewMatrix  * new Vector4(-_camera.front.X, -_camera.front.Y, _camera.front.Z, 1.0f)); ;
-        
-        
-        _spotLightParam.direction = new Vector3(_spotLightParam.direction.X, -_spotLightParam.direction.Y, _spotLightParam.direction.Z);
-       
-        
+        _globalAmbient = new Vector3(0.3f, 0.3f, 0.3f);
+        _spotLightParam.position = Vector3.Zero;
+        _spotLightParam.direction = -Vector3.UnitZ;
+
+
         _spotLightParam.cutoffAngle = MathF.Cos(((float) Math.PI / 180.0f)*15.5f);
         _spotLightParam.outerCutoff = MathF.Cos(((float)Math.PI / 180.0f) * 45.0f);
         _spotLightParam.intensity = 1.0f;
