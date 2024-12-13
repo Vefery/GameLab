@@ -5,7 +5,7 @@
         public Mesh mesh {  get; private set; }
         public WallPrefab()
         {
-            mesh = new Mesh(MainWindow.assetsPath + "Models\\Wall.model");
+            mesh = new Mesh(MainWindow.assetsPath + "Models/Wall.model");
         }
     }
 }

@@ -2,15 +2,13 @@
 using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
-using OpenTK.Input;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using MazeGame.Utils;
 using MazeGame.GameLogic;
-using System.Runtime.InteropServices;
+
 class MainWindow : GameWindow
 {
     private const int frameRate = 60; // Target frame rate
-    private ShaderProgram _shaderProgram;
+    private SpotlightShader _shaderProgram;
 
     /* Параметры освещения */
     private Spotlight _spotLightParam; // Параметры настройки освещения. Менаются в зависимости от положения камеры. 
@@ -20,7 +18,7 @@ class MainWindow : GameWindow
    
     private Camera _camera;
 
-    public static string assetsPath = AppDomain.CurrentDomain.BaseDirectory + "\\..\\..\\..\\Assets\\";
+    public static string assetsPath = AppDomain.CurrentDomain.BaseDirectory + "/../../../Assets/";
 
     private Matrix4 projectionMatrix, viewMatrix, modelMatrix, norm_matrix;
 
@@ -42,7 +40,7 @@ class MainWindow : GameWindow
         GL.Enable(EnableCap.DepthTest);
 
         // Загрузка шейдера
-        _shaderProgram = new ShaderProgram(assetsPath + "Shaders\\Vertex.glsl", assetsPath + "Shaders\\Fragment.glsl");
+        _shaderProgram = new SpotlightShader(assetsPath + "Shaders/Spotlight.vert", assetsPath + "Shaders/Spotlight.frag");
 
         // Инициализация камеры
         _camera = new Camera(new Vector3(0.0f, 5.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.0f));
@@ -71,9 +69,9 @@ class MainWindow : GameWindow
         // Устанавливаем матрицы камеры
         viewMatrix = _camera.GetMatrix();
 
-        // Не трограть 
-        _shaderProgram.SetUniform("view", viewMatrix);
-        _shaderProgram.SetUniform("projection", projectionMatrix);
+        // Не трограть
+        _shaderProgram.SetMatrix4("view", viewMatrix);
+        _shaderProgram.SetMatrix4("projection", projectionMatrix);
 
         foreach (var obj in MainLogic.renderables)
             DrawObject(obj.mesh, obj.position, obj.radianRotation, Vector3.One);
@@ -113,12 +111,12 @@ class MainWindow : GameWindow
         Gold.shininess = 51.2f;
 
 
-        _shaderProgram.SetUniform("material", Gold);
-        _shaderProgram.SetUniform("spotLight", _spotLightParam);
-        _shaderProgram.SetUniform("globalAmbient", _globalAmbient);
-        _shaderProgram.SetUniform("viewPos",_spotLightParam.position);
-        _shaderProgram.SetUniform("model", modelMatrix);
-        _shaderProgram.SetUniform("norm_matrix",norm_matrix);
+        _shaderProgram.SetMaterial("material", Gold);
+        _shaderProgram.SetSpotlight("spotLight", _spotLightParam);
+        _shaderProgram.SetVector3("globalAmbient", _globalAmbient);
+        _shaderProgram.SetVector3("viewPos",_spotLightParam.position);
+        _shaderProgram.SetMatrix4("model", modelMatrix);
+        _shaderProgram.SetMatrix4("norm_matrix",norm_matrix);
 
         mesh.draw();
     }
