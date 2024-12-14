@@ -24,6 +24,8 @@ class MainWindow : GameWindow
 
     public MainWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) { }
 
+    private SparkGUI.Toplevel toplevel;
+
     protected override void OnLoad()
     {
         base.OnLoad();
@@ -32,6 +34,41 @@ class MainWindow : GameWindow
 
         InitializeGraphics();
         MainLogic.InitializeScene();
+        // инициализация Spark должна происходить до любых остальных
+        // обращений к этой библиотеке
+        SparkGUI.Core.Init(this);
+
+        var sideBox = new SparkGUI.Box(new () {
+            BgColor = new(0, 0.7f, 0.5f, 1f),
+            Children = [
+                new SparkGUI.Label(new (){
+                    Margin = new () {
+                        Top = 10,
+                        Start = 10,
+                        End = 10,
+                    },
+                    MinWidth = 150,
+                    TextColor = new(0f, 0f, 0f, 1f),
+                    BgColor = new(1f, 1f, 1f, 1f),
+                    Text = "Hello world",
+                }),
+                new SparkGUI.Button(new (){
+                    Margin = new () {
+                        Start = 10,
+                        End = 10,
+                        Bottom = 10,
+                    },
+                    MinWidth = 150,
+                    TextColor = new(0.9f, 0.9f, 0.9f, 1f),
+                    BgColor = new(0.3f, 0f, 0.5f, 1f),
+                    Text = "Click me",
+                    ClickedCallback = _ => {
+                        Console.WriteLine("Clicked");
+                    }
+                }),
+            ]
+        });
+        toplevel = new SparkGUI.Toplevel(sideBox);
     }
 
     private void InitializeGraphics()
@@ -76,6 +113,8 @@ class MainWindow : GameWindow
         foreach (var obj in MainLogic.renderables)
             DrawObject(obj.mesh, obj.position, obj.radianRotation, Vector3.One);
 
+        // Итерация Spark должна запускаться после остальных
+        SparkGUI.Core.Tick();
         SwapBuffers();
     }
     private void DrawObject(Mesh mesh, Vector3 position, Vector3 eulerRotation, Vector3 scale)
