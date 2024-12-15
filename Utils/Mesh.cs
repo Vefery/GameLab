@@ -10,6 +10,10 @@ public class Mesh
     // Вершины хранятся в следующей последовательности:
     // |verte x|vertex y|vertex z|normal x|normal y|normal z|texture cord u|rexture cord v|...
     private List<float> _vertices;
+
+
+    // Вершины для обработки коллизий
+    public List<Vector3> verticesPos { get; private set; }
     /*
         string FilePathObj - Путя до файла модели
         string FilePathTexture - Путя до файла с текстурой пока нету  
@@ -17,7 +21,8 @@ public class Mesh
     public Mesh(string FileObj)
     {
         _vertices = new List<float>();
-        
+        verticesPos = new List<Vector3>();
+
         LoadObj(FileObj);
         InitBuffers();
     }
@@ -64,14 +69,14 @@ public class Mesh
             if(line.StartsWith("v "))
             {
                 var parts = line.Split(' ');
-                position.Add(
-                    new Vector3
+                Vector3 tmp = new Vector3
                     (
-                        float.Parse(parts[1], NumberStyles.Any,ci),
+                        float.Parse(parts[1], NumberStyles.Any, ci),
                         float.Parse(parts[2], NumberStyles.Any, ci),
                         float.Parse(parts[3], NumberStyles.Any, ci)
-                    )
-                );
+                    );
+                position.Add(tmp);
+                verticesPos.Add(tmp);
             }
             else if(line.StartsWith("vn "))
             {

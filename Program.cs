@@ -16,7 +16,7 @@ class MainWindow : GameWindow
     private Material Gold;
 
    
-    private Camera _camera;
+    private Player _player;
 
     public static string assetsPath = AppDomain.CurrentDomain.BaseDirectory + "/../../../Assets/";
 
@@ -79,9 +79,9 @@ class MainWindow : GameWindow
         // Загрузка шейдера
         _shaderProgram = new SpotlightShader(assetsPath + "Shaders/Spotlight.vert", assetsPath + "Shaders/Spotlight.frag");
 
-        // Инициализация камеры
-        _camera = new Camera(new Vector3(0.0f, 5.0f, 0.0f), new Vector3(0.0f, 1.0f, 0.0f));
-        MainLogic.gameObjects.Add(_camera);
+        // Инициализация игрока
+        _player = new Player(new Vector3(0.0f, 10.0f, 0.0f), new Vector3(1, 3, 1), 2, 4, 0.4f);
+        MainLogic.gameObjects.Add(_player);
 
         // Устанавливаем цвет очистки
         GL.ClearColor(0f, 0f, 0f, 1.0f);
@@ -91,7 +91,7 @@ class MainWindow : GameWindow
         base.OnResize(e);
         GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
 
-        projectionMatrix = _camera.getProjectionMatrix((float)ClientSize.X / ClientSize.Y);
+        projectionMatrix = _player.camera.getProjectionMatrix((float)ClientSize.X / ClientSize.Y);
     }
 
     protected override void OnRenderFrame(FrameEventArgs args)
@@ -104,7 +104,7 @@ class MainWindow : GameWindow
         _shaderProgram.Use();
 
         // Устанавливаем матрицы камеры
-        viewMatrix = _camera.GetMatrix();
+        viewMatrix = _player.camera.GetMatrix();
 
         // Не трограть
         _shaderProgram.SetMatrix4("view", viewMatrix);

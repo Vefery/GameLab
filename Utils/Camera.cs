@@ -7,11 +7,11 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 public class Camera : GameObject
 {
     public Vector3 front;
-    private Vector3 up;
-    private Vector3 right;
-    private Vector3 worldUp;
+    public Vector3 up;
+    public Vector3 right;
+    public Vector3 worldUp;
     private Quaternion orientation;
-    private float movementSpeed;
+    //private float movementSpeed;
     private float mouseSensetivity;
     private float fov;
     private float pitch;
@@ -22,7 +22,7 @@ public class Camera : GameObject
         position = _position;
         worldUp = _up;
         front = new Vector3(0.0f, 0.0f, -1.0f);
-        movementSpeed = 5f;
+        //movementSpeed = 5f;
         mouseSensetivity = 0.1f;
         fov = 90.0f;
         pitch = 0f;
@@ -42,8 +42,8 @@ public class Camera : GameObject
 
     public override void Update(float deltaTime)
     {
-        // Обновление логики камеры
-        var keyboard = MainLogic.keyboardState;
+        // Обновление логики камеры (Вынесено в класс игрока)
+        /*var keyboard = MainLogic.keyboardState;
         var mouse = MainLogic.mouseState;
 
         processMouseMovement(mouse.Delta.X, mouse.Delta.Y);
@@ -55,9 +55,11 @@ public class Camera : GameObject
         if (keyboard.IsKeyDown(Keys.A))
             ProcessKeyboard(Keys.A, deltaTime);
         if (keyboard.IsKeyDown(Keys.D))
-            ProcessKeyboard(Keys.D, deltaTime);
+            ProcessKeyboard(Keys.D, deltaTime);*/
     }
-    public void ProcessKeyboard(Keys key, float deltaTime)
+
+    // Вынесено в класс игрока
+    /*public void ProcessKeyboard(Keys key, float deltaTime)
     {
         float velocity = movementSpeed * deltaTime;
 
@@ -77,7 +79,7 @@ public class Camera : GameObject
         {
             position += right * velocity;
         }
-    }
+    }*/
     public void processMouseMovement(float xoffset, float yoffset)
     {
         /*xoffset *= mouseSensetivity;
