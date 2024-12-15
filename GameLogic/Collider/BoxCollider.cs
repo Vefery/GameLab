@@ -162,12 +162,11 @@ namespace MazeGame.GameLogic.Collider
             res.Z = Math.Abs(maxA.Z - minB.Z) < Math.Abs(maxB.Z - minA.Z) ? -(maxA.Z - minB.Z) : maxB.Z - minA.Z;
 
             if (Math.Abs(res.X) < Math.Abs(res.Y) && Math.Abs(res.X) < Math.Abs(res.Z))
-                { Console.WriteLine("X COLLIDE" + res.X); return new Vector3(res.X, 0, 0); }
+                { return new Vector3(res.X, 0, 0); }
             else if (Math.Abs(res.Y) < Math.Abs(res.X) && Math.Abs(res.Y) < Math.Abs(res.Z) )
-                { Console.WriteLine("Y COLLIDE" + res.Y); return new Vector3(0, res.Y, 0); }
+                { return new Vector3(0, res.Y, 0); }
             else
-                { Console.WriteLine("Z COLLIDE" + res.Z); return new Vector3(0, 0, res.Z); }
-            return new Vector3(0, 0, 0);
+                { return new Vector3(0, 0, res.Z); }
         }
     }
 }

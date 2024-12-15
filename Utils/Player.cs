@@ -83,7 +83,6 @@ namespace MazeGame.Utils
 
         public void ProcessKeyboard(Keys key, float deltaTime)
         {
-            Console.WriteLine(position);
             Vector3 projection = new Vector3(1, 1, 1);
             if (!flyMode)
                 projection = new Vector3(1, 0, 1);
