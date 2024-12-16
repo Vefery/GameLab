@@ -5,8 +5,8 @@ using OpenTK.Windowing.Common;
 using MazeGame.Utils;
 using MazeGame.GameLogic;
 using StbImageSharp;
-using System.IO;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using SparkGUI;
 
 class MainWindow : GameWindow
 {
@@ -44,6 +44,7 @@ class MainWindow : GameWindow
 
         var sideBox = new SparkGUI.Box(new () {
             BgColor = new(0, 0.7f, 0.5f, 1f),
+            Spacing = 10,
             Children = [
                 new SparkGUI.Label(new (){
                     Margin = new () {
@@ -54,25 +55,67 @@ class MainWindow : GameWindow
                     MinWidth = 150,
                     TextColor = new(0f, 0f, 0f, 1f),
                     BgColor = new(1f, 1f, 1f, 1f),
-                    Text = "Hello world",
+                    Text = "Difficulty",
                 }),
                 new SparkGUI.Button(new (){
                     Margin = new () {
-                        Start = 10,
+                        Start = 30,
                         End = 10,
-                        Bottom = 10,
                     },
                     MinWidth = 150,
                     TextColor = new(0.9f, 0.9f, 0.9f, 1f),
                     BgColor = new(0.3f, 0f, 0.5f, 1f),
-                    Text = "Click me",
+                    Text = "Easy",
                     ClickedCallback = _ => {
-                        Console.WriteLine("Clicked");
+                        Console.WriteLine("Easy");
                     }
                 }),
+                new SparkGUI.Button(new (){
+                    Margin = new () {
+                        Start = 30,
+                        End = 10,
+                    },
+                    MinWidth = 150,
+                    TextColor = new(0.9f, 0.9f, 0.9f, 1f),
+                    BgColor = new(0.3f, 0f, 0.5f, 1f),
+                    Text = "Medium",
+                    ClickedCallback = _ => {
+                        Console.WriteLine("Medium");
+                    }
+                }),
+                new SparkGUI.Button(new (){
+                    Margin = new () {
+                        Start = 30,
+                        End = 10,
+                    },
+                    MinWidth = 150,
+                    TextColor = new(0.9f, 0.9f, 0.9f, 1f),
+                    BgColor = new(0.3f, 0f, 0.5f, 1f),
+                    Text = "Hard",
+                    ClickedCallback = _ => {
+                        Console.WriteLine("Hard");
+                    }
+                }),
+                new SparkGUI.Button(new (){
+                    Margin = new () {
+                        Top = 30,
+                        Start = 10,
+                        End = 10,
+                        Bottom = 10,
+                    },
+                    MinWidth = 170,
+                    TextColor = new(0.9f, 0.9f, 0.9f, 1f),
+                    BgColor = new(0.3f, 0f, 0.5f, 1f),
+                    Text = "Quit",
+                    ClickedCallback = _ => {
+                        Close();
+                    }
+                }),
+                
             ]
         });
         toplevel = new SparkGUI.Toplevel(sideBox);
+        toplevel.Active = false;
     }
     private void HandleGameFinish()
     {
@@ -249,9 +292,24 @@ class MainWindow : GameWindow
         base.OnUpdateFrame(args);
 
         // HandleCollision();
-        MainLogic.keyboardState = KeyboardState;
-        MainLogic.mouseState = MouseState;
-        MainLogic.CallUpdate((float)args.Time);
+        if (!toplevel.Active)
+        {
+            MainLogic.keyboardState = KeyboardState;
+            MainLogic.mouseState = MouseState;
+            MainLogic.CallUpdate((float)args.Time);
+        }
+
+        var input = KeyboardState;
+        if (input.IsKeyReleased(Keys.Escape))
+        {
+            toplevel.Active = !toplevel.Active;
+            if (toplevel.Active)
+            {
+                CursorState = CursorState.Normal;
+            } else {
+                CursorState = CursorState.Grabbed;
+            }
+        }
     }
 
     protected override void OnUnload()
