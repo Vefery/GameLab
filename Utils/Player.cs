@@ -11,7 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace MazeGame.Utils
 {
-    internal class Player : GameObject
+    public class Player : GameObject
     {
         private float movementSpeed;
         private float gravity;
@@ -61,16 +61,21 @@ namespace MazeGame.Utils
                 flyMode = !flyMode;
             }
 
+            Vector2 inputVelocity = Vector2.Zero;
+
             if (keyboard.IsKeyDown(Keys.Space))
                 ProcessKeyboard(Keys.Space, deltaTime);
             if (keyboard.IsKeyDown(Keys.W))
-                ProcessKeyboard(Keys.W, deltaTime);
+                inputVelocity.Y = 1f;
             if (keyboard.IsKeyDown(Keys.S))
-                ProcessKeyboard(Keys.S, deltaTime);
+                inputVelocity.Y = -1f;
             if (keyboard.IsKeyDown(Keys.A))
-                ProcessKeyboard(Keys.A, deltaTime);
+                inputVelocity.X = -1f;
             if (keyboard.IsKeyDown(Keys.D))
-                ProcessKeyboard(Keys.D, deltaTime);
+                inputVelocity.X = 1f;
+
+            if (inputVelocity != Vector2.Zero)
+                HandleMovement(inputVelocity, deltaTime);
 
             if(!flyMode)
             {
@@ -81,11 +86,20 @@ namespace MazeGame.Utils
             camera.position = position + cameraPosition;
         }
 
+        public void HandleMovement(Vector2 inputVelocity, float deltaTime)
+        {
+            Vector3 projection = new(1, 1, 1);
+            if (!flyMode)
+                projection = new(1, 0, 1);
+
+            var temp = ((camera.right * inputVelocity.X + camera.front * inputVelocity.Y) * projection).Normalized();
+            position += ((camera.right * inputVelocity.X + camera.front * inputVelocity.Y) * projection).Normalized() * movementSpeed * deltaTime;
+        }
         public void ProcessKeyboard(Keys key, float deltaTime)
         {
-            Vector3 projection = new Vector3(1, 1, 1);
+            Vector3 projection = new(1, 1, 1);
             if (!flyMode)
-                projection = new Vector3(1, 0, 1);
+                projection = new(1, 0, 1);
             float velocity = movementSpeed * deltaTime;
 
             if (key == Keys.Space)
@@ -94,22 +108,6 @@ namespace MazeGame.Utils
                     position += camera.worldUp * velocity * projection;
                 else if(velocityY == 0)
                     velocityY -= 10 * deltaTime;
-            }
-            if (key == Keys.W)
-            {
-                position += camera.front * velocity * projection;
-            }
-            if (key == Keys.S)
-            {
-                position -= camera.front * velocity * projection;
-            }
-            if (key == Keys.A)
-            {
-                position -= camera.right * velocity * projection;
-            }
-            if (key == Keys.D)
-            {
-                position += camera.right * velocity;
             }
         }
 

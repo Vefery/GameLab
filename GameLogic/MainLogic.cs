@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+﻿using MazeGame.Utils;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace MazeGame.GameLogic
@@ -13,6 +14,13 @@ namespace MazeGame.GameLogic
         public static void InitializeScene()
         {
             gameObjects.Add(new Maze());
+        }
+        public static Player InitializePlayer()
+        {
+            Player _player = new Player(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1, 3, 1), 2, 4, 0.4f);
+            gameObjects.Add(_player);
+
+            return _player;
         }
         public static void CallUpdate(float deltaTime)
         {

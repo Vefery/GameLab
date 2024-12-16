@@ -12,10 +12,8 @@ class MainWindow : GameWindow
 
     /* Параметры освещения */
     private Spotlight _spotLightParam; // Параметры настройки освещения. Менаются в зависимости от положения камеры. 
-    private OpenTK.Mathematics.Vector3 _globalAmbient;
+    private Vector3 _globalAmbient;
     private Material Gold;
-
-   
     private Player _player;
 
     public static string assetsPath = AppDomain.CurrentDomain.BaseDirectory + "/../../../Assets/";
@@ -34,6 +32,7 @@ class MainWindow : GameWindow
 
         InitializeGraphics();
         MainLogic.InitializeScene();
+        _player = MainLogic.InitializePlayer();
         // инициализация Spark должна происходить до любых остальных
         // обращений к этой библиотеке
         SparkGUI.Core.Init(this);
@@ -78,10 +77,6 @@ class MainWindow : GameWindow
 
         // Загрузка шейдера
         _shaderProgram = new SpotlightShader(assetsPath + "Shaders/Spotlight.vert", assetsPath + "Shaders/Spotlight.frag");
-
-        // Инициализация игрока
-        _player = new Player(new Vector3(0.0f, 10.0f, 0.0f), new Vector3(1, 3, 1), 2, 4, 0.4f);
-        MainLogic.gameObjects.Add(_player);
 
         // Устанавливаем цвет очистки
         GL.ClearColor(0f, 0f, 0f, 1.0f);
