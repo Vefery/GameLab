@@ -1,15 +1,18 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using StbImageSharp;
 using System.Globalization;
+using System.IO;
 
 public class Mesh
 {
-
     private int _vao, _vbo;
 
     // Вершины хранятся в следующей последовательности:
     // |verte x|vertex y|vertex z|normal x|normal y|normal z|texture cord u|rexture cord v|...
     private List<float> _vertices;
+
+    public int texId;
 
 
     // Вершины для обработки коллизий
@@ -17,8 +20,8 @@ public class Mesh
     /*
         string FilePathObj - Путя до файла модели
         string FilePathTexture - Путя до файла с текстурой пока нету  
-     */
-    public Mesh(string FileObj)
+    */
+    public Mesh(string FileObj, string TexturePath)
     {
         _vertices = new List<float>();
         verticesPos = new List<Vector3>();
@@ -51,7 +54,6 @@ public class Mesh
 
         GL.BindVertexArray(0);
     }
-
     private void LoadObj(string FileObj)
     {
 

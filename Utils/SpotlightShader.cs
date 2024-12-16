@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using System.Reflection.Metadata;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 namespace MazeGame.Utils
@@ -22,7 +23,10 @@ namespace MazeGame.Utils
 
         public void SetVector3(string name, Vector3 vector)
             => Inner.SetVector3(name, vector);
-            
+
+        public void SetInt(string name, int data)
+            => Inner.SetInt(name, data);
+
         public void SetSpotlight(string name, Spotlight light)
         {
             /* main settings */

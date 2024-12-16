@@ -9,7 +9,8 @@ namespace MazeGame.GameLogic
         public BoxCollider collision { get; private set; }
         public FloorPrefab()
         {
-            mesh = new Mesh(MainWindow.assetsPath + "Models/Floor.model");
+            mesh = new Mesh(MainWindow.assetsPath + "Models/Floor.model", MainWindow.assetsPath + "Textures/Floor.png");
+            mesh.texId = 1;
             collision = new BoxCollider(new List<Vector3>(mesh.verticesPos));
         }
         public override void Start()

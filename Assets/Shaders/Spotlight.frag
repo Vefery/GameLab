@@ -35,11 +35,12 @@ uniform vec3 globalAmbient;
 uniform vec3 viewPos;  // Camera position
 uniform Material material;
 uniform SpotLight spotLight;
+uniform sampler2D u_texture;
 
 
 in vec3 varyingNormal; // eye-space vertex normal
 in vec3 varyingVertPos;
-//in vec2 varyingTexCord;
+in vec2 varyingTexCord;
 
 
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, Material material, vec3 globalAmbient);
@@ -52,7 +53,7 @@ void main()
     
     vec3 result = CalcSpotLight(spotLight, norm, varyingVertPos, viewDir, material, globalAmbient);
 
-    FragColor = vec4(result, 1.0);
+    FragColor =  texture(u_texture, varyingTexCord) * vec4(result, 1.0);
 }
 
 

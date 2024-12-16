@@ -22,7 +22,7 @@ void main()
     
     varyingVertPos = (vec4(aPosition,1.0)* model * view).xyz;
     varyingNormal = (vec4(aNormal, 1.0) * norm_matrix).xyz;
-    //varyingTexCord = aTexCoord;
+    varyingTexCord = aTexCoord;
 
     gl_Position = vec4(aPosition, 1.0)* model * view * projection;
 }

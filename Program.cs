@@ -4,6 +4,9 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using MazeGame.Utils;
 using MazeGame.GameLogic;
+using StbImageSharp;
+using System.IO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 class MainWindow : GameWindow
 {
@@ -13,7 +16,7 @@ class MainWindow : GameWindow
     /* Параметры освещения */
     private Spotlight _spotLightParam; // Параметры настройки освещения. Менаются в зависимости от положения камеры. 
     private Vector3 _globalAmbient;
-    private Material Gold;
+    private Material Material;
     private Player _player;
 
     public static string assetsPath = AppDomain.CurrentDomain.BaseDirectory + "/../../../Assets/";
@@ -34,6 +37,7 @@ class MainWindow : GameWindow
         _player = MainLogic.InitializePlayer();
         MainLogic.InitializeScene();
         MainLogic.OnFinished += HandleGameFinish;
+
         // инициализация Spark должна происходить до любых остальных
         // обращений к этой библиотеке
         SparkGUI.Core.Init(this);
@@ -83,7 +87,55 @@ class MainWindow : GameWindow
         _shaderProgram = new SpotlightShader(assetsPath + "Shaders/Spotlight.vert", assetsPath + "Shaders/Spotlight.frag");
 
         // Устанавливаем цвет очистки
-        GL.ClearColor(0f, 0f, 0f, 1.0f);
+        GL.ClearColor(0.6f, 0.6f, 0.6f, 1.0f);
+
+        StbImage.stbi_set_flip_vertically_on_load(1); // приводит текстуры к формату opengl
+        InitializeTexturePool();
+    }
+    private void InitializeTexturePool()
+    {
+        int textureId;
+        ImageResult image;
+        // 1 - Пол
+        GL.GenTextures(1, out textureId);
+        GL.BindTexture(TextureTarget.Texture2D, textureId);
+        image = ImageResult.FromStream(File.OpenRead(MainWindow.assetsPath + "Textures/Floor.png"), ColorComponents.RedGreenBlue);
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, image.Width, image.Height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, image.Data);
+        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+        SetupTextureParams();
+        
+        // 2 - Стены
+        GL.GenTextures(1, out textureId);
+        GL.BindTexture(TextureTarget.Texture2D, textureId);
+        image = ImageResult.FromStream(File.OpenRead(MainWindow.assetsPath + "Textures/Wall.png"), ColorComponents.RedGreenBlue);
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, image.Width, image.Height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, image.Data);
+        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+        SetupTextureParams();
+
+        // 3 - Потолок
+        GL.GenTextures(1, out textureId);
+        GL.BindTexture(TextureTarget.Texture2D, textureId);
+        image = ImageResult.FromStream(File.OpenRead(MainWindow.assetsPath + "Textures/Ceiling.png"), ColorComponents.RedGreenBlue);
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, image.Width, image.Height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, image.Data);
+        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+        SetupTextureParams();
+
+        // 4 - Дверь
+        GL.GenTextures(1, out textureId);
+        GL.BindTexture(TextureTarget.Texture2D, textureId);
+        image = ImageResult.FromStream(File.OpenRead(MainWindow.assetsPath + "Textures/Exit.png"), ColorComponents.RedGreenBlue);
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, image.Width, image.Height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, image.Data);
+        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+        SetupTextureParams();
+    }
+    private void SetupTextureParams()
+    {
+        // Set texture parameters
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, (int)All.False);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
     }
     protected override void OnResize(ResizeEventArgs e)
     {
@@ -140,23 +192,56 @@ class MainWindow : GameWindow
         _spotLightParam.constant = 1.0f;
         _spotLightParam.linear = 0.09f;
         _spotLightParam.quadratic = 0.032f;
-        _spotLightParam.color = new Vector3(1.0f, 1.0f, 1.0f);
-      
+        _spotLightParam.color = new Vector3(1.0f, 1.0f, 0.7f);
+
         /* Вкинем материал */
-        Gold.ambient = new Vector3(0.24725f, 0.1995f, 0.0745f);
-        Gold.diffuse = new Vector3 (0.75164f, 0.60648f, 0.22648f);
-        Gold.specular = new Vector3(0.62828f, 0.5558f, 0.36607f);
-        Gold.shininess = 51.2f;
+        SetupMaterial(mesh.texId);
 
 
-        _shaderProgram.SetMaterial("material", Gold);
+        _shaderProgram.SetMaterial("material", Material);
         _shaderProgram.SetSpotlight("spotLight", _spotLightParam);
         _shaderProgram.SetVector3("globalAmbient", _globalAmbient);
         _shaderProgram.SetVector3("viewPos",_spotLightParam.position);
         _shaderProgram.SetMatrix4("model", modelMatrix);
         _shaderProgram.SetMatrix4("norm_matrix",norm_matrix);
 
+        GL.ActiveTexture(TextureUnit.Texture0); // Activate texture unit 0
+        GL.BindTexture(TextureTarget.Texture2D, mesh.texId);
+        _shaderProgram.SetInt("u_texture", 0);
+
         mesh.draw();
+    }
+
+    private void SetupMaterial(int id)
+    {
+        if (id == 1)
+        {
+            Material.ambient = new Vector3(0.2f, 0.2f, 0.2f);
+            Material.diffuse = new Vector3(1f, 1f, 1f);
+            Material.specular = new Vector3(0f, 0f, 0f);
+            Material.shininess = 1.2f;
+        }
+        else if (id == 2)
+        {
+            Material.ambient = new Vector3(0.2f, 0.2f, 0.2f);
+            Material.diffuse = new Vector3(1f, 1f, 1f);
+            Material.specular = new Vector3(0.3f, 0.3f, 0.3f);
+            Material.shininess = 10.2f;
+        }
+        else if (id == 3)
+        {
+            Material.ambient = new Vector3(0.2f, 0.2f, 0.2f);
+            Material.diffuse = new Vector3(1f, 1f, 1f);
+            Material.specular = new Vector3(0.4f, 0.4f, 0.4f);
+            Material.shininess = 20.2f;
+        }
+        else if (id == 4)
+        {
+            Material.ambient = new Vector3(0.25f, 0.25f, 0.25f);
+            Material.diffuse = new Vector3(0.7f, 0.7f, 0.7f);
+            Material.specular = new Vector3(0.774597f, 0.774597f, 0.774597f);
+            Material.shininess = 76.8f;
+        }
     }
 
     protected override void OnUpdateFrame(FrameEventArgs args)
@@ -192,7 +277,7 @@ class MainWindow : GameWindow
         var nativeWindowSettings = new NativeWindowSettings
         {
             ClientSize = new Vector2i(1280, 720),
-            Title = "3D Scene with OpenTK"
+            Title = "Backrooms"
         };
 
         using var window = new MainWindow(gameWindowSettings, nativeWindowSettings);

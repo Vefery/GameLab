@@ -90,13 +90,13 @@ namespace MazeGame.Utils
             
             return res;
         }
-    
+
         public void SetInt(string name, int data)
         {
             GL.UseProgram(Handle);
             GL.Uniform1(_uniformLocations[name], data);
         }
-    
+
         public void SetFloat(string name, float data)
         {
             GL.UseProgram(Handle);
@@ -120,5 +120,7 @@ namespace MazeGame.Utils
             GL.UseProgram(Handle);
             GL.Uniform4(_uniformLocations[name], data);
         }
+
+
     }
 }

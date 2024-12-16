@@ -10,14 +10,15 @@ namespace MazeGame.GameLogic
         private GameObject player;
         public ExitDoor()
         {
-            mesh = new Mesh(MainWindow.assetsPath + "Models/ExitDoor.model");
+            mesh = new Mesh(MainWindow.assetsPath + "Models/ExitDoor.model", MainWindow.assetsPath + "Textures/Exit.png");
+            mesh.texId = 4;
             player = MainLogic.gameObjects.OfType<Player>().Single();
         }
 
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
-            if (Vector3.Distance(position, player.position) < 1)
+            if (Vector3.Distance(position, player.position) < 2)
                 MainLogic.finishFlag = true;
         }
     }

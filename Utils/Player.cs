@@ -63,8 +63,8 @@ namespace MazeGame.Utils
 
             Vector2 inputVelocity = Vector2.Zero;
 
-            if (keyboard.IsKeyDown(Keys.Space))
-                ProcessKeyboard(Keys.Space, deltaTime);
+            /*if (keyboard.IsKeyDown(Keys.Space))
+                ProcessKeyboard(Keys.Space, deltaTime);*/
             if (keyboard.IsKeyDown(Keys.W))
                 inputVelocity.Y = 1f;
             if (keyboard.IsKeyDown(Keys.S))
