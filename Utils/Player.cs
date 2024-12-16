@@ -92,7 +92,6 @@ namespace MazeGame.Utils
             if (!flyMode)
                 projection = new(1, 0, 1);
 
-            var temp = ((camera.right * inputVelocity.X + camera.front * inputVelocity.Y) * projection).Normalized();
             position += ((camera.right * inputVelocity.X + camera.front * inputVelocity.Y) * projection).Normalized() * movementSpeed * deltaTime;
         }
         public void ProcessKeyboard(Keys key, float deltaTime)
