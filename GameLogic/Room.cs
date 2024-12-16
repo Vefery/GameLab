@@ -13,6 +13,7 @@ namespace MazeGame.GameLogic
         public override void Start()
         {
             MainLogic.Instantiate<FloorPrefab>(position);
+            MainLogic.Instantiate<CeilingPrefab>(position);
         }
         public void Generate(Maze maze)
         {
