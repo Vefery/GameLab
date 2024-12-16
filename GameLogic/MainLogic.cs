@@ -6,10 +6,12 @@ namespace MazeGame.GameLogic
 {
     public static class MainLogic
     {
+        public static event Action? OnFinished;
         public static List<GameObject> gameObjects = [];
         public static List<IRenderable> renderables { get { return gameObjects.OfType<IRenderable>().ToList(); } }
         public static KeyboardState keyboardState;
         public static MouseState mouseState;
+        public static bool finishFlag = false;
 
         public static void InitializeScene()
         {
@@ -17,13 +19,27 @@ namespace MazeGame.GameLogic
         }
         public static Player InitializePlayer()
         {
-            Player _player = new Player(new Vector3(0.0f, 2.0f, 0.0f), new Vector3(1, 5, 1), 3, 4, 0.4f);
+            Player _player = new Player(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1, 5, 1), 3, 4, 0.4f);
             gameObjects.Add(_player);
 
             return _player;
         }
+        public static Player ReloadLevel()
+        {
+            gameObjects.Clear();
+
+            var player = InitializePlayer();
+            InitializeScene();
+            return player;
+        }
         public static void CallUpdate(float deltaTime)
         {
+            if (finishFlag)
+            {
+                OnFinished?.Invoke();
+                finishFlag = false;
+                return;
+            }
             foreach (var gameObject in gameObjects)
                 gameObject.Update(deltaTime);
         }

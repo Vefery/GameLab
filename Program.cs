@@ -31,8 +31,9 @@ class MainWindow : GameWindow
         CursorState = CursorState.Grabbed;
 
         InitializeGraphics();
-        MainLogic.InitializeScene();
         _player = MainLogic.InitializePlayer();
+        MainLogic.InitializeScene();
+        MainLogic.OnFinished += HandleGameFinish;
         // инициализация Spark должна происходить до любых остальных
         // обращений к этой библиотеке
         SparkGUI.Core.Init(this);
@@ -69,7 +70,10 @@ class MainWindow : GameWindow
         });
         toplevel = new SparkGUI.Toplevel(sideBox);
     }
-
+    private void HandleGameFinish()
+    {
+        _player = MainLogic.ReloadLevel();
+    }
     private void InitializeGraphics()
     {
         // Устанавливаем параметры OpenGL

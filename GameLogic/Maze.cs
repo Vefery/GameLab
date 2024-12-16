@@ -9,13 +9,14 @@ namespace MazeGame.GameLogic
     public class Maze : GameObject
     {
         public Vector3 target;
-        public int depth = 50;
+        public int depth = 10;
         public bool goalSpawned = false;
         public Vector3 startPose;
         public List<Vector3> tilePositions = new();
         public List<Room> rooms = new();
         private int initDepth;
         public List<Action> roomsCreateActions = new();
+        public ExitDoor exitDoor;
 
         public Maze()
         {
@@ -37,9 +38,20 @@ namespace MazeGame.GameLogic
             if (!goalSpawned)
             {
                 goalSpawned = true;
-                //target = Instantiate(targetPrefab, rooms.Last().position, Quaternion.Identity).transform;
+                SpawnExit(rooms.Last());
             }
             roomsCreateActions.Clear();
+        }
+        public void SpawnExit(Room room)
+        {
+            if (room.left == null)
+                exitDoor = MainLogic.Instantiate<ExitDoor>(room.position);
+            else if (room.right == null)
+                exitDoor = MainLogic.Instantiate<ExitDoor>(room.position, new Vector3(0f, 180f, 0f));
+            else if (room.up == null)
+                exitDoor = MainLogic.Instantiate<ExitDoor>(room.position, new Vector3(0f, 90f, 0f));
+            else
+                exitDoor = MainLogic.Instantiate<ExitDoor>(room.position, new Vector3(0f, -90f, 0f));
         }
         public void ResetMaze()
         {

@@ -48,7 +48,7 @@ namespace MazeGame.GameLogic
             if (maze.depth <= 0 && !maze.goalSpawned)
             {
                 maze.goalSpawned = true;
-                //maze.target = Instantiate(maze.targetPrefab, this.position, Quaternion.Identity).transform;
+                maze.SpawnExit(this);
             }
         }
 
