@@ -25,6 +25,12 @@ namespace MazeGame.GameLogic
             initDepth = depth;
             rooms.Add(MainLogic.Instantiate<Room>(position));
 
+            if (MainLogic.difficulty == 0)
+                depth = 6;
+            else if (MainLogic.difficulty == 1)
+                depth = 20;
+            else if (MainLogic.difficulty == 2)
+                depth = 50;
             GenerateMaze();
         }
 

@@ -12,6 +12,7 @@ namespace MazeGame.GameLogic
         public static KeyboardState keyboardState;
         public static MouseState mouseState;
         public static bool finishFlag = false;
+        public static int difficulty = 0;
 
         public static void InitializeScene()
         {
