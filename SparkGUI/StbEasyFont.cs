@@ -68,7 +68,7 @@ struct Color (byte[] c)
     readonly public byte[] c = c;
 }
 
-static uint DrawSegs(float x, float y, Span<byte> segs, bool vertical, Color c, float[] vbuf, uint offset)
+static uint DrawSegs(float x, float y, Span<byte> segs, bool vertical, float[] vbuf, uint offset)
 {
     int i,j;
     for (i=0; i < segs.Length; ++i) {
@@ -93,13 +93,12 @@ static void Spacing(float spacing)
    SpacingVal = spacing;
 }
 
-public static uint Print(float x, float y, string text, byte[] color, float[] vertex_buffer)
+public static uint Print(float x, float y, string text, float[] vertex_buffer)
 {
     var vbuf = vertex_buffer;
     float start_x = x;
     uint offset = 0;
 
-    Color c = new(color);
     int textIter = 0;
 
     while (textIter < text.Length && offset < vertex_buffer.Length) {
@@ -114,8 +113,8 @@ public static uint Print(float x, float y, string text, byte[] color, float[] ve
             v_seg = CharInfo[text[textIter]-32  ].v_seg;
             num_h = CharInfo[text[textIter]-32+1].h_seg - h_seg;
             num_v = CharInfo[text[textIter]-32+1].v_seg - v_seg;
-            offset = DrawSegs(x, y_ch, new Span<byte>(HSeg, h_seg, num_h), false, c, vbuf, offset);
-            offset = DrawSegs(x, y_ch, new Span<byte>(VSeg, v_seg, num_v), true, c, vbuf, offset);
+            offset = DrawSegs(x, y_ch, new Span<byte>(HSeg, h_seg, num_h), false, vbuf, offset);
+            offset = DrawSegs(x, y_ch, new Span<byte>(VSeg, v_seg, num_v), true, vbuf, offset);
             x += advance & 15;
             x += SpacingVal;
         }

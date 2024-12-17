@@ -111,6 +111,28 @@ namespace SparkGUI
             return false;
         }
         
+        public override bool HandleMotion(MouseMoveEventArgs e)
+        {
+            bool capture = false;
+            
+            foreach (var c in children)
+            {
+                capture |= c.HandleMotion(e);
+            }
+            
+            if (capture)
+            {
+                return true;
+            }
+            
+            if (ContentBounds.Contains(Core._gameWindow.MousePosition))
+            {
+                return true;
+            }
+    
+            return false;
+        }
+        
         void AddChild(Widget widget)
         {
             _addSpacing();

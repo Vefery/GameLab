@@ -56,6 +56,9 @@ namespace SparkGUI
         // возвращает true если нужно захватить нажатие
         public abstract bool HandleClick(MouseButtonEventArgs e);
         
+        // возвращает true если нужно захватить событие о перемещении мыши
+        public abstract bool HandleMotion(MouseMoveEventArgs e);
+        
         // только одна проверка, но всё равно рекомендуется вызывать
         // этот метод в дочерних классах 
         public virtual void Render() {

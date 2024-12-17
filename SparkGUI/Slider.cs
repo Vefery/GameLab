@@ -37,6 +37,7 @@ namespace SparkGUI
         public event Action<float> ValueEvent;
         public float Value { get; private set; }
         private int? _loopID = null;
+        private bool _hovered = false;
 
         public override bool HandleClick(MouseButtonEventArgs e)
         {
@@ -69,12 +70,29 @@ namespace SparkGUI
             return false;
         }
         
+        public override bool HandleMotion(MouseMoveEventArgs e)
+        {
+            if (ContentBounds.Contains(e.Position))
+            {
+                _hovered = true;
+                return true;
+            } else {
+                _hovered = false;
+                return false;
+            }
+        }
+        
+        
         public override void Render()
         {
             base.Render();
 
+            var Bg = BgColor;
+            if (_hovered) {
+                Bg.R += 0.1f;
+            }
             Core.DrawTrianglesFan(
-                BgColor,
+                Bg,
                 ContentBounds.FlattenAs3D()
             );
 

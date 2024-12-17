@@ -41,6 +41,7 @@ namespace SparkGUI
         public Color4 BgColor;
         public event System.Action<MouseButtonEventArgs> ClickedEvent;
         private Label _label;
+        private bool _hovered = false;
 
         public override Vector2 Position {
             get => base.Position;
@@ -71,13 +72,31 @@ namespace SparkGUI
             }
             return false;
         }
+        
+        public override bool HandleMotion(MouseMoveEventArgs e)
+        {
+            if (ContentBounds.Contains(e.Position))
+            {
+                _hovered = true;
+                return true;
+            } else {
+                _hovered = false;
+                return false;
+            }
+        }
 
         public override void Render()
         {
             base.Render();
             
+            var Bg = BgColor;
+            if (_hovered) {
+                Bg.R -= 0.2f;
+                Bg.B -= 0.2f;
+            }
+
             Core.DrawTrianglesFan(
-                BgColor,
+                Bg,
                 ContentBounds.FlattenAs3D()
             );
 

@@ -55,6 +55,14 @@ namespace SparkGUI
             }
         }
         
+        public void HandleMotion(MouseMoveEventArgs args)
+        {
+            if (Active)
+            {
+                _child.HandleMotion(args);
+            }
+        }
+        
         public Toplevel(Widget child)
         {
             ContentBounds.Y2 = Core._gameWindow.Bounds.Size.Y;
@@ -63,6 +71,7 @@ namespace SparkGUI
             Core._gameWindow.Resize += ResizeCallback;
             Core._gameWindow.MouseUp += HandleClick;
             Core._gameWindow.MouseDown += HandleClick;
+            Core._gameWindow.MouseMove += HandleMotion;
         }
         
         private void ResizeCallback(ResizeEventArgs args)
@@ -70,6 +79,10 @@ namespace SparkGUI
             // в предположении что Toplevel находится в (0, 0)
             ContentBounds.Y2 = args.Height;
             ContentBounds.X2 = args.Width;
+            
+            var x = (ContentBounds.Width - _child.Width) / 2f;
+            var y = (ContentBounds.Height - _child.Height) / 2f;
+            _child.Position = new(x, y);
         }
 
         private int renderLoopID = -1;

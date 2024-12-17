@@ -55,7 +55,7 @@ class MainWindow : GameWindow
                     MinWidth = 150,
                     TextColor = new(0f, 0f, 0f, 1f),
                     BgColor = new(1f, 1f, 1f, 1f),
-                    Text = "Difficulty",
+                    Text = "Difficulty:",
                 }),
                 new SparkGUI.Button(new (){
                     Margin = new () {

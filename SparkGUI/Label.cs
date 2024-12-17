@@ -61,23 +61,22 @@ namespace SparkGUI
                 return;
             }
 
-            float x0 = (Width - Stb.EasyFont.Width(Text) * 2) / 2;
-            float y0 = (Height - Stb.EasyFont.Height(Text) * 2) / 2;
+            float x = (Width - Stb.EasyFont.Width(Text) * 2f) / 2f;
+            float y = (Height - Stb.EasyFont.Height(Text) * 2f) / 2f;
 
             float[] buf = new float[9999];
             var numQuads = Stb.EasyFont.Print(
                 0,
                 0,
                 Text,
-                null,
                 buf
             );
 
             Core.DrawQuads(
                 TextColor,
                 new Span<float>(buf, 0, (int)numQuads * 4 * 3),
-                ContentBounds.X1 + x0,
-                ContentBounds.Y1 + y0,
+                ContentBounds.X1 + x,
+                ContentBounds.Y1 + y,
                 scale: 2
             );
         }
@@ -90,6 +89,11 @@ namespace SparkGUI
             {
                 return true;
             }
+            return false;
+        }
+        
+        public override bool HandleMotion(MouseMoveEventArgs e)
+        {
             return false;
         }
     }
