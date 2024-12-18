@@ -19,7 +19,10 @@ namespace MazeGame.GameLogic
         {
             base.Update(deltaTime);
             if (Vector3.Distance(position, player.position) < 2)
+            {
+                MazeGame.Utils.AudioDoor.Play();
                 MainLogic.finishFlag = true;
+            }  
         }
     }
 }

@@ -18,8 +18,10 @@ namespace MazeGame.Utils
         private float velocityY;
         private Vector3 cameraPosition;
         public Camera camera;
+        private float stepTime = 0;
 
         bool flyMode;
+        Random soundEvent = new Random();
 
         public BoxCollider collider { get; private set; }
 
@@ -75,9 +77,24 @@ namespace MazeGame.Utils
                 inputVelocity.X = 1f;
 
             if (inputVelocity != Vector2.Zero)
+            {
+                stepTime += deltaTime;
+                if (stepTime > 0.5)
+                {
+                    AudioPlayer.Play();
+                    stepTime = 0;
+                }
                 HandleMovement(inputVelocity, deltaTime);
+            }
 
-            if(!flyMode)
+
+            if (soundEvent.Next(0, 2000) == 666)
+            {
+                AudioEvents.Play();
+            }
+            //Console.WriteLine("deltaTime " + deltaTime);
+
+            if (!flyMode)
             {
                 velocityY += gravity * deltaTime;
                 position -= new Vector3(0, velocityY, 0);
