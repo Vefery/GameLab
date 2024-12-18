@@ -7,6 +7,7 @@ namespace MazeGame.Utils
     public class SpotlightShader
     {
         public Shader Inner;
+        public float shaker = 0;
 
         public SpotlightShader(string vertexShaderPath, string fragmentShaderPath)
         {
@@ -28,6 +29,30 @@ namespace MazeGame.Utils
             => Inner.SetInt(name, data);
 
         public void SetSpotlight(string name, Spotlight light)
+        {
+            /* main settings */
+            light.position[0] += MathF.Cos(2*shaker) / 8f;
+            light.position[1] += MathF.Sin(shaker) / 8f;
+            light.intensity = (MathF.Sin(shaker) * MathF.Sin(2 * shaker))/2 + 1.5f;
+
+            shaker += 0.0005f;
+
+            SetVector3($"{name}.position", light.position);
+            SetVector3($"{name}.direction", light.direction);
+            SetFloat($"{name}.cutoffAngle", light.cutoffAngle);
+            SetFloat($"{name}.outerCutoff", light.outerCutoff);
+            SetFloat($"{name}.intensity", light.intensity);
+
+            /* attenuation */
+            SetFloat($"{name}.constant", light.constant);
+            SetFloat($"{name}.linear", light.linear);
+            SetFloat($"{name}.quadratic", light.quadratic);
+
+            /* color of light */
+            SetVector3($"{name}.color", light.color);
+        }
+
+        public void ShakingSpotlight(string name, Spotlight light)
         {
             /* main settings */
             SetVector3($"{name}.position", light.position);

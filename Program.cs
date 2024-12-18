@@ -34,6 +34,7 @@ class MainWindow : GameWindow
         CursorState = CursorState.Grabbed;
 
         InitializeGraphics();
+        InitializeAudio();
         _player = MainLogic.InitializePlayer();
         MainLogic.InitializeScene();
         MainLogic.OnFinished += HandleGameFinish;
@@ -135,6 +136,15 @@ class MainWindow : GameWindow
         StbImage.stbi_set_flip_vertically_on_load(1); // приводит текстуры к формату opengl
         InitializeTexturePool();
     }
+
+    private void InitializeAudio()
+    {
+        AudioPlayer.LoadAudio(assetsPath);
+        AudioDoor.LoadAudio(assetsPath);
+        AudioAmbient.PlayAmbient(assetsPath);
+        AudioEvents.LoadAudio(assetsPath);
+    }
+
     private void InitializeTexturePool()
     {
         int textureId;
@@ -231,7 +241,6 @@ class MainWindow : GameWindow
 
         _spotLightParam.cutoffAngle = MathF.Cos(((float) Math.PI / 180.0f)*15.5f);
         _spotLightParam.outerCutoff = MathF.Cos(((float)Math.PI / 180.0f) * 45.0f);
-        _spotLightParam.intensity = 1.0f;
         _spotLightParam.constant = 1.0f;
         _spotLightParam.linear = 0.09f;
         _spotLightParam.quadratic = 0.032f;
