@@ -50,11 +50,11 @@ namespace MazeGame.GameLogic
         }
         public void SpawnExit(Room room)
         {
-            if (room.left == null)
+            if (room.left == null && CheckPosition(room.position + new Vector3(-room.halfWidth, 0, 0)))
                 exitDoor = MainLogic.Instantiate<ExitDoor>(room.position);
-            else if (room.right == null)
+            else if (room.right == null && CheckPosition(room.position + new Vector3(room.halfWidth, 0, 0)))
                 exitDoor = MainLogic.Instantiate<ExitDoor>(room.position, new Vector3(0f, 180f, 0f));
-            else if (room.up == null)
+            else if (room.up == null && CheckPosition(room.position + new Vector3(0, 0, room.halfWidth)))
                 exitDoor = MainLogic.Instantiate<ExitDoor>(room.position, new Vector3(0f, 90f, 0f));
             else
                 exitDoor = MainLogic.Instantiate<ExitDoor>(room.position, new Vector3(0f, -90f, 0f));
