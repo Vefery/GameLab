@@ -67,7 +67,8 @@ class MainWindow : GameWindow
                     BgColor = new(0.3f, 0f, 0.5f, 1f),
                     Text = "Easy",
                     ClickedCallback = _ => {
-                        Console.WriteLine("Easy");
+                        MainLogic.difficulty = 0;
+                        MainLogic.finishFlag = true;
                     }
                 }),
                 new SparkGUI.Button(new (){
@@ -80,7 +81,8 @@ class MainWindow : GameWindow
                     BgColor = new(0.3f, 0f, 0.5f, 1f),
                     Text = "Medium",
                     ClickedCallback = _ => {
-                        Console.WriteLine("Medium");
+                        MainLogic.difficulty = 1;
+                        MainLogic.finishFlag = true;
                     }
                 }),
                 new SparkGUI.Button(new (){
@@ -93,7 +95,8 @@ class MainWindow : GameWindow
                     BgColor = new(0.3f, 0f, 0.5f, 1f),
                     Text = "Hard",
                     ClickedCallback = _ => {
-                        Console.WriteLine("Hard");
+                        MainLogic.difficulty = 2;
+                        MainLogic.finishFlag = true;
                     }
                 }),
                 new SparkGUI.Button(new (){
