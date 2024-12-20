@@ -26,7 +26,7 @@ class MainWindow : GameWindow
     public MainWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings) { }
 
     private SparkGUI.Toplevel toplevel;
-
+    AudioObject AudioAmbient = new AudioObject();
     protected override void OnLoad()
     {
         base.OnLoad();
@@ -142,10 +142,8 @@ class MainWindow : GameWindow
 
     private void InitializeAudio()
     {
-        AudioPlayer.LoadAudio(assetsPath);
-        AudioDoor.LoadAudio(assetsPath);
-        AudioAmbient.PlayAmbient(assetsPath);
-        AudioEvents.LoadAudio(assetsPath);
+        AudioAmbient.LoadAudio(assetsPath, "Ambient");
+        AudioAmbient.PlayAudio(looped:true);
     }
 
     private void InitializeTexturePool()
