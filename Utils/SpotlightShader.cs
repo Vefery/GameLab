@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata;
+using MazeGame.GameLogic;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
@@ -40,7 +41,7 @@ namespace MazeGame.Utils
             light.position[1] += MathF.Sin(shaker) / 8f;
             light.intensity = /*(MathF.Sin(shaker) * MathF.Sin(2 * shaker)) / 2 + */1f - flicker;
 
-            shaker += 0.0005f;
+            shaker += 0.005f / MainLogic.gameObjects.Count;
             if (shaker > 6 * MathF.PI)
                 shaker = 0f;
 

@@ -121,8 +121,6 @@ public class Mesh
                 }
             }
         }
-        Console.WriteLine(position.Count);
-
     }
 
     public void draw()

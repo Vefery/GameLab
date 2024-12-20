@@ -20,10 +20,12 @@ namespace MazeGame.Utils
 
         public static void Play()
         {
-            var audioFileReader = new AudioFileReader(audioFilePath);
-            var outputDevice = new WaveOutEvent();
-            outputDevice.Init(audioFileReader);
-            outputDevice.Play();
+            using (var audioFileReader = new AudioFileReader(audioFilePath))
+            using (var outputDevice = new WaveOutEvent())
+            {
+                outputDevice.Init(audioFileReader);
+                outputDevice.Play();
+            }
         }
     }
 }
