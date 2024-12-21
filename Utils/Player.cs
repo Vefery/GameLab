@@ -25,6 +25,8 @@ namespace MazeGame.Utils
 
         public BoxCollider collider { get; private set; }
 
+        AudioObject AudioPlayer = new AudioObject();
+        AudioObject AudioEvents = new AudioObject();
         public Player(Vector3 _position, Vector3 _size, float _cameraHeight, float _speed, float _gravity)
         {
             position = _position;
@@ -47,6 +49,11 @@ namespace MazeGame.Utils
                 new Vector3(_size.X/2, _size.Y, -_size.Z/2),
                 new Vector3(_size.X/2, _size.Y, _size.Z/2)
             });
+
+            string assetsPath = AppDomain.CurrentDomain.BaseDirectory + "/../../../Assets/";
+
+            AudioPlayer.LoadAudio(assetsPath, "Steps");
+            AudioEvents.LoadAudio(assetsPath, "Events");
         }
 
         public override void Update(float deltaTime)
@@ -81,7 +88,7 @@ namespace MazeGame.Utils
                 stepTime += deltaTime;
                 if (stepTime > 0.5)
                 {
-                    AudioPlayer.Play();
+                    AudioPlayer.PlayAudio(looped:false);
                     stepTime = 0;
                 }
                 HandleMovement(inputVelocity, deltaTime);
@@ -90,9 +97,8 @@ namespace MazeGame.Utils
 
             if (soundEvent.Next(0, 2000) == 666)
             {
-                AudioEvents.Play();
+                AudioEvents.PlayAudio(looped: false);
             }
-            //Console.WriteLine("deltaTime " + deltaTime);
 
             if (!flyMode)
             {
