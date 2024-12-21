@@ -27,9 +27,9 @@ namespace MazeGame.Utils
                 curAudioFile = 0;
             }
             using (var libVLC = new LibVLC())
+            using (var media = new Media(libVLC, audioFilesPath[curAudioFile], FromType.FromPath))
             {
                 var mediaPlayer = new MediaPlayer(libVLC);
-                var media = new Media(libVLC, audioFilesPath[curAudioFile], FromType.FromPath);
                 mediaPlayer.Play(media);
             }
             curAudioFile++;
