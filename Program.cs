@@ -70,6 +70,7 @@ class MainWindow : GameWindow
                     ClickedCallback = _ => {
                         MainLogic.difficulty = 0;
                         MainLogic.finishFlag = true;
+                        IsMenuActive = false;
                     }
                 }),
                 new SparkGUI.Button(new (){
@@ -84,6 +85,7 @@ class MainWindow : GameWindow
                     ClickedCallback = _ => {
                         MainLogic.difficulty = 1;
                         MainLogic.finishFlag = true;
+                        IsMenuActive = false;
                     }
                 }),
                 new SparkGUI.Button(new (){
@@ -98,6 +100,7 @@ class MainWindow : GameWindow
                     ClickedCallback = _ => {
                         MainLogic.difficulty = 2;
                         MainLogic.finishFlag = true;
+                        IsMenuActive = false;
                     }
                 }),
                 new SparkGUI.Button(new (){
@@ -297,6 +300,20 @@ class MainWindow : GameWindow
         }
     }
 
+
+    private bool IsMenuActive {
+        get => toplevel.Active;
+        set {
+            toplevel.Active = value;
+            if (value)
+            {
+                CursorState = CursorState.Normal;
+            } else {
+                CursorState = CursorState.Grabbed;
+            }
+        }
+    }
+
     protected override void OnUpdateFrame(FrameEventArgs args)
     {
         base.OnUpdateFrame(args);
@@ -312,13 +329,7 @@ class MainWindow : GameWindow
         var input = KeyboardState;
         if (input.IsKeyReleased(Keys.Escape))
         {
-            toplevel.Active = !toplevel.Active;
-            if (toplevel.Active)
-            {
-                CursorState = CursorState.Normal;
-            } else {
-                CursorState = CursorState.Grabbed;
-            }
+            IsMenuActive = !IsMenuActive;
         }
     }
 
