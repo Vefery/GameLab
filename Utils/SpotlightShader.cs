@@ -34,15 +34,15 @@ namespace MazeGame.Utils
         {
             /* main settings */
             float flicker = 0;
-            if (shaker < 0.3f)
-                flicker = 0.5f * MathF.Pow(MathF.Sin(10 * shaker), 2);
+            if (shaker < 0.5f)
+                flicker = 0.5f * MathF.Pow(MathF.Sin(12 * shaker), 2);
 
-            light.position[0] += MathF.Cos(2*shaker) / 8f;
-            light.position[1] += MathF.Sin(shaker) / 8f;
+            light.position[0] += MathF.Cos(shaker) / 8f;
+            light.position[1] += MathF.Sin(0.5f*shaker) / 8f;
             light.intensity = /*(MathF.Sin(shaker) * MathF.Sin(2 * shaker)) / 2 + */1f - flicker;
 
-            shaker += 0.005f / MainLogic.gameObjects.Count;
-            if (shaker > 6 * MathF.PI)
+            shaker += 0.05f / MainLogic.gameObjects.Count;
+            if (shaker > 5 * MathF.PI)
                 shaker = 0f;
 
             SetVector3($"{name}.position", light.position);

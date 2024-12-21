@@ -38,18 +38,13 @@ namespace MazeGame.Utils
         {
             Task.Run(() =>
             {
-                while (true)
+                using (var libVLC = new LibVLC("--input-repeat=1000000000"))
+                using (var media = new Media(libVLC, audioFilesPath[0], FromType.FromPath))
                 {
-                    using (var libVLC = new LibVLC("--input-repeat=1000000000"))
-                    using (var mediaPlayer = new MediaPlayer(libVLC))
-                    {
-                        var media = new Media(libVLC, audioFilesPath[0], FromType.FromPath);
-                        mediaPlayer.Media = media;
-                        mediaPlayer.Play();
-                        Console.ReadKey();
-                    }
+                    var mediaPlayer = new MediaPlayer(libVLC);
+                    mediaPlayer.Media = media;
+                    mediaPlayer.Play();
                 }
-
             });
         }
         public virtual void PlayAudio(bool looped)
