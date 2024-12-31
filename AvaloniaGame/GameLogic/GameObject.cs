@@ -1,35 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using OpenTK.Mathematics;
+using Silk.NET.OpenGL;
 
 namespace AvaloniaGame.GameLogic
 {
     public abstract class GameObject
     {
-        public Vector3 position;
-        public Vector3 eulerRotation;
+        public Vector3 position {  get; set; }
+        public Vector3 eulerRotation { get; set; }
+        public Vector3 radianRotation { get => new Vector3(MathHelper.DegreesToRadians(eulerRotation.X), MathHelper.DegreesToRadians(eulerRotation.Y), MathHelper.DegreesToRadians(eulerRotation.Z));  }
 
-        public virtual void Awake() { }
-        public virtual void Start() { }
-        public virtual void Update(float deltaTime) { }
+        public abstract void Update(float deltaTime);
+        public abstract void Start(GL gl);
 
-        public GameObject()
+        public GameObject(GL gl)
         {
             eulerRotation = Vector3.Zero;
-            MainLogic.OnAwakeGlobal += Awake;
-            MainLogic.OnStartGlobal += Start;
-            MainLogic.OnUpdateGlobal += Update;
         }
         public GameObject(Vector3 position)
         {
             eulerRotation = Vector3.Zero;
             this.position = position;
-            MainLogic.OnAwakeGlobal += Awake;
-            MainLogic.OnStartGlobal += Start;
-            MainLogic.OnUpdateGlobal += Update;
         }
     }
 }

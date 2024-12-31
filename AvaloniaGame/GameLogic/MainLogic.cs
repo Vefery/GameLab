@@ -1,77 +1,77 @@
-﻿using Avalonia.OpenGL;
-using Avalonia.OpenGL.Controls;
-using AvaloniaGame.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+
+using OpenTK.Mathematics;
+using Silk.NET.OpenGL;
+
+using AvaloniaGame.Utils;
 
 namespace AvaloniaGame.GameLogic
 {
     public static class MainLogic
     {
-        public static event Action? OnAwakeGlobal;
-        public static event Action? OnStartGlobal;
-        public static event Action<float>? OnUpdateGlobal;
-
-        private const int frameRate = 60; // Target frame rate
-        private static readonly TimeSpan FrameTime = TimeSpan.FromSeconds(1.0 / frameRate);
-        private static DateTime _lastUpdateTime;
-        private static OpenGLClass _glControl;
+        public static GL gl {set; private get;}
+        public static event Action? OnFinished;
         public static List<GameObject> gameObjects = [];
-        public static List<GameObject> renderables = [];
-
-        public static void StartWork(OpenGLClass glControl)
+        public static List<IRenderable> renderables
         {
-            _glControl = glControl;
-
-            gameObjects.Add(new Maze());
-
-            OnAwakeGlobal?.Invoke();
-            OnStartGlobal?.Invoke();
-
-            renderables = gameObjects.Where(o => o is IRenderable).ToList();
-            //colliders = gameObjects.Where(o => o is ICollider).ToList();
-
-            GameLoop();
-        }
-        async static void GameLoop()
-        {
-            _lastUpdateTime = DateTime.Now;
-
-            while (true)
+            get
             {
-                var now = DateTime.Now;
-                var elapsed = now - _lastUpdateTime;
-
-                if (elapsed >= FrameTime)
-                {
-                    float deltaTime = (float)elapsed.TotalSeconds;
-                    OnUpdateGlobal?.Invoke(deltaTime);
-                    _glControl.RenderFrame();
-                    _lastUpdateTime = now;
-                }
-
-                await Task.Delay(1);
+                return gameObjects.OfType<IRenderable>().ToList();
             }
         }
-        public static T Instantiate<T>(Vector3 position, Vector3 rotation) where T : GameObject, new()
+        // public static KeyboardState keyboardState;
+        // public static MouseState mouseState;
+        public static bool finishFlag = false;
+        public static int difficulty = 0;
+
+        public static void InitializeScene()
         {
-            T newObject = new();
-            newObject.position = position;
-            newObject.eulerRotation = rotation;
-            gameObjects.Add(newObject);
-            return newObject;
+            gameObjects.Add(new Maze(gl));
         }
-        public static T Instantiate<T>(Vector3 position) where T : GameObject, new()
+        public static Player InitializePlayer()
         {
-            T newObject = new();
-            newObject.position = position;
-            newObject.eulerRotation = Vector3.Zero;
-            gameObjects.Add(newObject);
-            return newObject;
+            Player _player = new Player(gl, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1, 5, 1), 3, 4, 0.4f);
+            gameObjects.Add(_player);
+
+            return _player;
+        }
+        public static Player ReloadLevel()
+        {
+            gameObjects.Clear();
+
+            var player = InitializePlayer();
+            InitializeScene();
+            return player;
+        }
+        public static void CallUpdate(float deltaTime)
+        {
+            if (finishFlag)
+            {
+                OnFinished?.Invoke();
+                finishFlag = false;
+                return;
+            }
+            foreach (var gameObject in gameObjects)
+                gameObject.Update(deltaTime);
+        }
+
+        public static T Register<T>(T gameObject, Vector3 position, Vector3 rotation)
+        where T: GameObject
+        {
+            gameObject.position = position;
+            gameObject.eulerRotation = rotation;
+            gameObjects.Add(gameObject);
+            gameObject.Start(gl);
+            return gameObject;
+        }
+
+        public static T Register<T>(T gameObject, Vector3 position)
+        where T: GameObject
+        {
+            Register(gameObject, position, Vector3.Zero);
+            return gameObject;
         }
     }
 }
