@@ -1,4 +1,4 @@
-#version 330 core
+#version 460
 
 uniform vec4 aColor;
 in vec3 aPosition;
