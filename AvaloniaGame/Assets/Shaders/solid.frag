@@ -1,4 +1,6 @@
-#version 460
+#version 300 es
+
+precision mediump float;
 
 in vec4 bColor;
 

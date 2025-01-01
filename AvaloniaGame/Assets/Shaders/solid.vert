@@ -1,4 +1,6 @@
-#version 460
+#version 300 es
+
+precision mediump float;
 
 uniform vec4 aColor;
 in vec3 aPosition;
