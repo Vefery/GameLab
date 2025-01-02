@@ -27,7 +27,7 @@ namespace AvaloniaGame.OpenGL
         private Spotlight _spotLightParam; // Параметры настройки освещения. Менаются в зависимости от положения камеры.
         private Vector3 _globalAmbient;
         private Material Material;
-        public Player Player = MainLogic.InitializePlayer();
+        public Player Player;
 
 
         private bool LoadShader(string shaderName)
@@ -55,6 +55,7 @@ namespace AvaloniaGame.OpenGL
             MainLogic.gl = gl;
             InitializeGraphics(gl);
             InitializeAudio();
+            Player = MainLogic.InitializePlayer();
             MainLogic.InitializeScene();
             MainLogic.OnFinished += () => Player = MainLogic.ReloadLevel();
             CheckError(aGL);

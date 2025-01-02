@@ -31,16 +31,16 @@ namespace AvaloniaGame.Utils
         AudioObject AudioEvents = new AudioObject();
 
         // HACK: уберите детей от экрана
-        [Flags]
-        enum WASDF {
-            W = 1,
-            A = 2,
-            S = 4,
-            D = 8,
-            F = 16,
+        struct GameInputs
+        {
+            public bool W;
+            public bool A;
+            public bool S;
+            public bool D;
+            public bool F;
         }
 
-        WASDF keys = 0;
+        GameInputs gameInputs = new();
         Point? lastPointerPos = new();
         Point pointerDelta = new();
 
@@ -88,23 +88,23 @@ namespace AvaloniaGame.Utils
             switch (e.Key)
             {
                 case Key.W:
-                    keys &= ~WASDF.W;
+                    gameInputs.W = false;
                     e.Handled = true;
                     break;
                 case Key.A:
-                    keys &= ~WASDF.A;
+                    gameInputs.A = false;
                     e.Handled = true;
                     break;
                 case Key.S:
-                    keys &= ~WASDF.S;
+                    gameInputs.S = false;
                     e.Handled = true;
                     break;
                 case Key.D:
-                    keys &= ~WASDF.D;
+                    gameInputs.D = false;
                     e.Handled = true;
                     break;
                 case Key.F:
-                    keys &= ~WASDF.F;
+                    gameInputs.F = false;
                     e.Handled = true;
                     break;
             };
@@ -115,23 +115,23 @@ namespace AvaloniaGame.Utils
             switch (e.Key)
             {
                 case Key.W:
-                    keys |= WASDF.W;
+                    gameInputs.W = true;
                     e.Handled = true;
                     break;
                 case Key.A:
-                    keys |= WASDF.A;
+                    gameInputs.A = true;
                     e.Handled = true;
                     break;
                 case Key.S:
-                    keys |= WASDF.S;
+                    gameInputs.S = true;
                     e.Handled = true;
                     break;
                 case Key.D:
-                    keys |= WASDF.D;
+                    gameInputs.D = true;
                     e.Handled = true;
                     break;
                 case Key.F:
-                    keys |= WASDF.F;
+                    gameInputs.F = true;
                     e.Handled = true;
                     break;
             }
@@ -141,24 +141,24 @@ namespace AvaloniaGame.Utils
         {
             var inputVelocity = Vector2.Zero;
 
-            if ((keys & WASDF.W) == WASDF.W)
+            if (gameInputs.W)
             {
                 inputVelocity.Y = 1f;
             }
-            if ((keys & WASDF.A) == WASDF.A)
+            if (gameInputs.A)
             {
                 inputVelocity.X = -1f;
             }
-            if ((keys & WASDF.S) == WASDF.S)
+            if (gameInputs.S)
             {
                 inputVelocity.Y = -1f;
             }
-            if ((keys & WASDF.D) == WASDF.D)
+            if (gameInputs.D)
             {
                 inputVelocity.X = 1f;
             }
 
-            if ( (keys & WASDF.F) == WASDF.F)
+            if ( gameInputs.F)
             {
                 if(!flyMode)
                 {
