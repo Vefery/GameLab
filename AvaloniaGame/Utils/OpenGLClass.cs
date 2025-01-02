@@ -27,7 +27,7 @@ namespace AvaloniaGame.OpenGL
         private Spotlight _spotLightParam; // Параметры настройки освещения. Менаются в зависимости от положения камеры.
         private Vector3 _globalAmbient;
         private Material Material;
-        public Player Player;
+        public Player player;
 
 
         private bool LoadShader(string shaderName)
@@ -55,9 +55,13 @@ namespace AvaloniaGame.OpenGL
             MainLogic.gl = gl;
             InitializeGraphics(gl);
             InitializeAudio();
-            Player = MainLogic.InitializePlayer();
+            player = MainLogic.InitializePlayer();
             MainLogic.InitializeScene();
-            MainLogic.OnFinished += () => Player = MainLogic.ReloadLevel();
+            MainLogic.OnFinished += () => { 
+                player.Dispose();
+                player = null;
+                player = MainLogic.ReloadLevel(); 
+            };
             CheckError(aGL);
         }
 
@@ -134,7 +138,7 @@ namespace AvaloniaGame.OpenGL
             lastTick = DateTime.Now;
 
             gl.Viewport(0, 0, (uint)Bounds.Width, (uint)Bounds.Height);
-            projectionMatrix = Player.camera.getProjectionMatrix( (float)(Bounds.Width / Bounds.Height) );
+            projectionMatrix = player.camera.getProjectionMatrix( (float)(Bounds.Width / Bounds.Height) );
 
             gl.ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
             gl.Clear( (uint) (GLEnum.ColorBufferBit | GLEnum.DepthBufferBit) );
@@ -142,7 +146,7 @@ namespace AvaloniaGame.OpenGL
             _shaderProgram.Use(gl);
 
             // Устанавливаем матрицы камеры
-            viewMatrix = Player.camera.GetMatrix();
+            viewMatrix = player.camera.GetMatrix();
 
             // Не трогать
             _shaderProgram.SetMatrix4(gl, "view", viewMatrix);

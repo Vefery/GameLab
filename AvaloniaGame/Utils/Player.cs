@@ -13,7 +13,7 @@ using AvaloniaGame.GameLogic.Collider;
 
 namespace AvaloniaGame.Utils
 {
-    public class Player : GameObject
+    public class Player : GameObject, IDisposable
     {
         private float movementSpeed;
         private float gravity;
@@ -21,6 +21,7 @@ namespace AvaloniaGame.Utils
         private Vector3 cameraPosition;
         public Camera camera;
         private float stepTime = 0;
+        private bool _disposed = false;
 
         bool flyMode;
         Random soundEvent = new Random();
@@ -109,7 +110,7 @@ namespace AvaloniaGame.Utils
                     break;
             };
         }
-
+        
         public void KeyDownHandler(object? sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -255,6 +256,16 @@ namespace AvaloniaGame.Utils
         public override void Start(GL gl)
         {
             throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            MainLogic.control.KeyDown -= KeyDownHandler;
+            MainLogic.control.KeyUp -= KeyUpHandler;
+            MainLogic.control.PointerMoved -= PointerMovedHandler;
         }
     }
 }

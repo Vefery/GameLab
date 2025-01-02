@@ -45,6 +45,7 @@ namespace AvaloniaGame.GameLogic
         }
         public static Player ReloadLevel()
         {
+            
             gameObjects.Clear();
 
             var player = InitializePlayer();
