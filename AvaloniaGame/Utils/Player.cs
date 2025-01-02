@@ -41,8 +41,8 @@ namespace AvaloniaGame.Utils
         }
 
         WASDF keys = 0;
-        Point? lastPointerPos = null;
-        Vector2 pointerDelta = Vector2.Zero;
+        Point? lastPointerPos = new();
+        Point pointerDelta = new();
 
         public Player(GL gl, Vector3 _position, Vector3 _size, float _cameraHeight, float _speed, float _gravity) : base(gl)
         {
@@ -71,17 +71,15 @@ namespace AvaloniaGame.Utils
             AudioEvents.LoadAudio("Events");
         }
 
-        // TODO: дельта никогда не будет равна нулю
         public void PointerMovedHandler(object? sender, PointerEventArgs e)
         {
             var newPos = e.GetPosition(sender as Control);
-            if (lastPointerPos != null)
+
+            if (lastPointerPos is not null)
             {
-                pointerDelta = new (
-                    (float)(-lastPointerPos.Value.X + newPos.X),
-                    (float)(-lastPointerPos.Value.Y + newPos.Y)
-                ); 
+                pointerDelta = newPos - lastPointerPos.Value;
             }
+            //Console.WriteLine($"X: {pointerDelta.X}\tY: {pointerDelta.Y}");
             lastPointerPos = newPos;
         }
 
@@ -169,7 +167,10 @@ namespace AvaloniaGame.Utils
                 flyMode = !flyMode;
             }
 
-            camera.processMouseMovement(pointerDelta.X, pointerDelta.Y);
+            camera.processMouseMovement((float)pointerDelta.X, (float)pointerDelta.Y);
+            // Костыль чтобы не было дрифта камеры если не двигать мышью
+            pointerDelta = pointerDelta.WithX(0f);
+            pointerDelta = pointerDelta.WithY(0f);
 
             /*if (keyboard.IsKeyDown(Keys.Space))
                 ProcessKeyboard(Keys.Space, deltaTime);*/

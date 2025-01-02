@@ -112,16 +112,13 @@ namespace AvaloniaGame.Utils
             gl.Uniform1(_uniformLocations[name], data);
         }
 
-        unsafe public void SetMatrix4(GL gl, string name, Matrix4 data)
+        public void SetMatrix4(GL gl, string name, Matrix4 data)
         {
             gl.UseProgram(Handle);
-            fixed (float *data_p = data.Flatten())
-            {
-                gl.UniformMatrix4(_uniformLocations[name], 1, true, data_p);
-            }
+            gl.UniformMatrix4(_uniformLocations[name], 1, true, data.Flatten());
         }
 
-        unsafe public void SetVector3(GL gl, string name, Vector3 data)
+        public void SetVector3(GL gl, string name, Vector3 data)
         {
             gl.UseProgram(Handle);
             gl.Uniform3(_uniformLocations[name], data.X, data.Y, data.Z);

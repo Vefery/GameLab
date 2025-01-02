@@ -9,6 +9,7 @@ using StbImageSharp;
 
 using AvaloniaGame.GameLogic;
 using AvaloniaGame.Utils;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AvaloniaGame.OpenGL
 {
@@ -77,7 +78,7 @@ namespace AvaloniaGame.OpenGL
             AudioAmbient.PlayAudio(looped: true);
         }
 
-        unsafe private void InitializeTexturePool(GL gl)
+        private void InitializeTexturePool(GL gl)
         {
             uint textureId;
             ImageResult image;
@@ -85,10 +86,7 @@ namespace AvaloniaGame.OpenGL
             gl.GenTextures(1, out textureId);
             gl.BindTexture(GLEnum.Texture2D, textureId);
             image = ImageResult.FromStream(AssetLoader.Open(new Uri("avares://AvaloniaGame/Assets/" + "Textures/Floor.png")), ColorComponents.RedGreenBlue);
-            fixed (byte *date_p = image.Data)
-            {
-                gl.TexImage2D(GLEnum.Texture2D, 0, (int)InternalFormat.Rgb, (uint)image.Width, (uint)image.Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, date_p);
-            }
+            gl.TexImage2D(GLEnum.Texture2D, 0, (int)InternalFormat.Rgb, (uint)image.Width, (uint)image.Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, new ReadOnlySpan<byte>(image.Data));
             gl.GenerateMipmap(GLEnum.Texture2D);
             SetupTextureParams(gl);
 
@@ -96,10 +94,7 @@ namespace AvaloniaGame.OpenGL
             gl.GenTextures(1, out textureId);
             gl.BindTexture(GLEnum.Texture2D, textureId);
             image = ImageResult.FromStream(AssetLoader.Open(new Uri("avares://AvaloniaGame/Assets/" + "Textures/Wall.png")), ColorComponents.RedGreenBlue);
-            fixed (byte *date_p = image.Data)
-            {
-                gl.TexImage2D(GLEnum.Texture2D, 0, (int)InternalFormat.Rgb, (uint)image.Width, (uint)image.Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, date_p);
-            }
+            gl.TexImage2D(GLEnum.Texture2D, 0, (int)InternalFormat.Rgb, (uint)image.Width, (uint)image.Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, new ReadOnlySpan<byte>(image.Data));
             gl.GenerateMipmap(GLEnum.Texture2D);
             SetupTextureParams(gl);
 
@@ -107,10 +102,7 @@ namespace AvaloniaGame.OpenGL
             gl.GenTextures(1, out textureId);
             gl.BindTexture(GLEnum.Texture2D, textureId);
             image = ImageResult.FromStream(AssetLoader.Open(new Uri("avares://AvaloniaGame/Assets/" + "Textures/Ceiling.png")), ColorComponents.RedGreenBlue);
-            fixed (byte *date_p = image.Data)
-            {
-                gl.TexImage2D(GLEnum.Texture2D, 0, (int)InternalFormat.Rgb, (uint)image.Width, (uint)image.Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, date_p);
-            }
+            gl.TexImage2D(GLEnum.Texture2D, 0, (int)InternalFormat.Rgb, (uint)image.Width, (uint)image.Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, new ReadOnlySpan<byte>(image.Data));
             gl.GenerateMipmap(GLEnum.Texture2D);
             SetupTextureParams(gl);
 
@@ -118,10 +110,7 @@ namespace AvaloniaGame.OpenGL
             gl.GenTextures(1, out textureId);
             gl.BindTexture(GLEnum.Texture2D, textureId);
             image = ImageResult.FromStream(AssetLoader.Open(new Uri("avares://AvaloniaGame/Assets/" + "Textures/Exit.png")), ColorComponents.RedGreenBlue);
-            fixed (byte *date_p = image.Data)
-            {
-                gl.TexImage2D(GLEnum.Texture2D, 0, (int)InternalFormat.Rgb, (uint)image.Width, (uint)image.Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, date_p);
-            }
+            gl.TexImage2D(GLEnum.Texture2D, 0, (int)InternalFormat.Rgb, (uint)image.Width, (uint)image.Height, 0, GLEnum.Rgb, GLEnum.UnsignedByte, new ReadOnlySpan<byte>(image.Data));
             gl.GenerateMipmap(GLEnum.Texture2D);
             SetupTextureParams(gl);
         }
@@ -236,29 +225,6 @@ namespace AvaloniaGame.OpenGL
                 Material.diffuse = new Vector3(0.7f, 0.7f, 0.7f);
                 Material.specular = new Vector3(0.774597f, 0.774597f, 0.774597f);
                 Material.shininess = 76.8f;
-            }
-        }
-
-        private unsafe void RenderObject(GlInterface aGL, Mesh mesh)
-        {
-            var Gl = GL.GetApi(aGL.GetProcAddress);
-            Gl.ClearColor(0.5f, 0.5f,0.5f, 1.0f);
-
-            float[] vertices = [1f, 2f, 3f, 4f];
-
-            var vbo = Gl.GenBuffer();
-            var vao = Gl.GenVertexArray();
-
-
-            Gl.BindBuffer(GLEnum.ArrayBuffer, vbo);
-            fixed(float *data = vertices)
-            {
-                Gl.BufferData(
-                    GLEnum.ArrayBuffer,
-                    (nuint)vertices.Length * sizeof(float),
-                    data,
-                    GLEnum.DynamicDraw
-                );
             }
         }
 

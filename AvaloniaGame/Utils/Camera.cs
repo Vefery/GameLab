@@ -24,7 +24,7 @@ public class Camera : GameObject
         worldUp = _up;
         front = new Vector3(0.0f, 0.0f, -1.0f);
         //movementSpeed = 5f;
-        mouseSensetivity = 0.1f;
+        mouseSensetivity = 1.3f;
         fov = 90.0f;
         pitch = 0f;
         yaw = -90f;
@@ -92,6 +92,7 @@ public class Camera : GameObject
 
         orientation = yawRotation * orientation * pitchRotation;
         orientation = orientation.Normalized();*/
+        //Console.WriteLine($"X: {xoffset}\tY: {yoffset}");
         pitch -= yoffset * mouseSensetivity;
         yaw += xoffset * mouseSensetivity;
 

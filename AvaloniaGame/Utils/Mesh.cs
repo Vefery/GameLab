@@ -34,23 +34,20 @@ public class Mesh
         InitBuffers(gl);
     }
 
-    unsafe private void InitBuffers(GL gl)
+    private void InitBuffers(GL gl)
     {
         _vao = gl.GenVertexArray();
         _vbo = gl.GenBuffer();
 
         gl.BindVertexArray(_vao);
         gl.BindBuffer(GLEnum.ArrayBuffer, _vbo);
-        fixed (float *data_p = _vertices.ToArray())
-        {
-            gl.BufferData(
+
+        gl.BufferData(
                 GLEnum.ArrayBuffer,
-                (uint) _vertices.Count * sizeof(float),
-                data_p,
+                (uint)_vertices.Count * sizeof(float),
+                new ReadOnlySpan<float>(_vertices.ToArray()),
                 GLEnum.StaticDraw
             );
-        }
-
         // Настройка атрибута позиции вершин
         // pos
         gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
