@@ -7,6 +7,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         x:Class="AvaloniaGame.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="AvaloniaGame">
+        Title="AvaloniaGame"
+		Height="720"
+		Width="1280">
   <views:MainView x:Name="MainView"/>
 </Window>

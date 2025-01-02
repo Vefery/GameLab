@@ -8,6 +8,7 @@ using Silk.NET.OpenGL;
 using AvaloniaGame.Utils;
 using AvaloniaGame.Views;
 using Avalonia.Controls;
+using System.IO;
 
 namespace AvaloniaGame.GameLogic
 {
@@ -62,6 +63,12 @@ namespace AvaloniaGame.GameLogic
             }
             foreach (var gameObject in gameObjects)
                 gameObject.Update(deltaTime);
+        }
+
+        public static void OnCloseCleanUp(Object? sender, WindowClosingEventArgs e)
+        {
+            // ѕо хорошему надо удал€ть временные файлы, но они используютс€ libvlc и залочены
+            //Directory.Delete("Temp", true);
         }
 
         public static T Register<T>(T gameObject, Vector3 position, Vector3 rotation)

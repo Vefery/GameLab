@@ -137,7 +137,7 @@ namespace AvaloniaGame.OpenGL
             MainLogic.CallUpdate( (float) (DateTime.Now - lastTick).TotalSeconds );
             lastTick = DateTime.Now;
 
-            gl.Viewport(0, 0, (uint)Bounds.Width, (uint)Bounds.Height);
+            gl.Viewport(0, 0, (uint)(Bounds.Width * 1.25), (uint)(Bounds.Height * 1.25));
             projectionMatrix = player.camera.getProjectionMatrix( (float)(Bounds.Width / Bounds.Height) );
 
             gl.ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
