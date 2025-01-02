@@ -8,6 +8,7 @@ using Silk.NET.OpenGL;
 using AvaloniaGame.Utils;
 using AvaloniaGame.Views;
 using Avalonia.Controls;
+using System.IO;
 
 namespace AvaloniaGame.GameLogic
 {
@@ -27,7 +28,7 @@ namespace AvaloniaGame.GameLogic
         // public static MouseState mouseState;
         public static bool finishFlag = false;
         public static int difficulty = 0;
-        public static Control control;
+        public static Window mainWindow;
 
         public static void InitializeScene()
         {
@@ -36,9 +37,9 @@ namespace AvaloniaGame.GameLogic
         public static Player InitializePlayer()
         {
             Player _player = new Player(gl, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1, 5, 1), 3, 4, 0.4f);
-            control.KeyDown += _player.KeyDownHandler;
-            control.KeyUp += _player.KeyUpHandler;
-            control.PointerMoved += _player.PointerMovedHandler;
+            mainWindow.KeyDown += _player.KeyDownHandler;
+            mainWindow.KeyUp += _player.KeyUpHandler;
+            mainWindow.PointerMoved += _player.PointerMovedHandler;
             gameObjects.Add(_player);
 
             return _player;
@@ -62,6 +63,12 @@ namespace AvaloniaGame.GameLogic
             }
             foreach (var gameObject in gameObjects)
                 gameObject.Update(deltaTime);
+        }
+
+        public static void OnCloseCleanUp(Object? sender, WindowClosingEventArgs e)
+        {
+            // ѕо хорошему надо удал€ть временные файлы, но они используютс€ libvlc и залочены
+            //Directory.Delete("Temp", true);
         }
 
         public static T Register<T>(T gameObject, Vector3 position, Vector3 rotation)

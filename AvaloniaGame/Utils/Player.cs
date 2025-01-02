@@ -82,6 +82,7 @@ namespace AvaloniaGame.Utils
             }
             //Console.WriteLine($"X: {pointerDelta.X}\tY: {pointerDelta.Y}");
             lastPointerPos = newPos;
+            e.Handled = true;
         }
 
         public void KeyUpHandler(object? sender, KeyEventArgs e)
@@ -170,8 +171,7 @@ namespace AvaloniaGame.Utils
 
             camera.processMouseMovement((float)pointerDelta.X, (float)pointerDelta.Y);
             // Костыль чтобы не было дрифта камеры если не двигать мышью
-            pointerDelta = pointerDelta.WithX(0f);
-            pointerDelta = pointerDelta.WithY(0f);
+            pointerDelta = new(0, 0);
 
             /*if (keyboard.IsKeyDown(Keys.Space))
                 ProcessKeyboard(Keys.Space, deltaTime);*/
@@ -263,9 +263,9 @@ namespace AvaloniaGame.Utils
             if (_disposed)
                 return;
 
-            MainLogic.control.KeyDown -= KeyDownHandler;
-            MainLogic.control.KeyUp -= KeyUpHandler;
-            MainLogic.control.PointerMoved -= PointerMovedHandler;
+            MainLogic.mainWindow.KeyDown -= KeyDownHandler;
+            MainLogic.mainWindow.KeyUp -= KeyUpHandler;
+            MainLogic.mainWindow.PointerMoved -= PointerMovedHandler;
         }
     }
 }
