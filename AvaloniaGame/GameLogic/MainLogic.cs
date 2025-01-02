@@ -67,7 +67,7 @@ namespace AvaloniaGame.GameLogic
 
         public static void OnCloseCleanUp(Object? sender, WindowClosingEventArgs e)
         {
-            // По хорошему надо удалять временные файлы, но они используются libvlc и залочены
+            // РџРѕ С…РѕСЂРѕС€РµРјСѓ РЅР°РґРѕ СѓРґР°Р»СЏС‚СЊ РІСЂРµРјРµРЅРЅС‹Рµ С„Р°Р№Р»С‹, РЅРѕ РѕРЅРё РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ libvlc Рё Р·Р°Р»РѕС‡РµРЅС‹
             //Directory.Delete("Temp", true);
         }
 
