@@ -12,7 +12,18 @@ namespace AvaloniaGame.Utils
     public class AudioObject
     {
         private Uri[] audioFilesPath;
+        private string tmpAudio;
         private static int curAudioFile = 0;
+
+        public AudioObject()
+        {
+            // GetTempPath(): C:/Users/*UserName*/AppData/Local/Temp/ или /tmp/
+            tmpAudio = Path.Combine(Path.GetTempPath(), "GameLabAudio");
+            if (!Directory.Exists(tmpAudio))
+            {
+                Directory.CreateDirectory(tmpAudio);
+            }
+        }
 
         // NOTE: Здесь раньше была загрузка wav или mp3, что попадётся первым
         public virtual void LoadAudio(string audioFolder)
@@ -34,15 +45,12 @@ namespace AvaloniaGame.Utils
                 throw new Exception("No audio files!");
             }
 
-            if (!Directory.Exists("./Temp"))
-                Directory.CreateDirectory("./Temp");
-
             foreach (var path in audioFilesPath)
             {
-                if (Path.Exists(Path.Combine("Temp", Path.GetFileName(path.AbsolutePath))))
+                if (Path.Exists(Path.Combine(tmpAudio, Path.GetFileName(path.AbsolutePath))))
                     continue;
                 var InputStream = AssetLoader.Open(path);
-                using (var fileStream = File.Create(Path.Combine("Temp", Path.GetFileName(path.AbsolutePath))))
+                using (var fileStream = File.Create(Path.Combine(tmpAudio, Path.GetFileName(path.AbsolutePath))))
                 {
                     InputStream.Seek(0, SeekOrigin.Begin);
                     InputStream.CopyTo(fileStream);
@@ -56,7 +64,7 @@ namespace AvaloniaGame.Utils
                 curAudioFile = 0;
             }
             using (var libVLC = new LibVLC())
-            using (var media = new Media(libVLC, Path.Combine("Temp", Path.GetFileName(audioFilesPath[curAudioFile].AbsolutePath)), FromType.FromPath))
+            using (var media = new Media(libVLC, Path.Combine(tmpAudio, Path.GetFileName(audioFilesPath[curAudioFile].AbsolutePath)), FromType.FromPath))
             {
                 var mediaPlayer = new MediaPlayer(libVLC);
                 mediaPlayer.Play(media);
@@ -68,7 +76,7 @@ namespace AvaloniaGame.Utils
             Task.Run( () => {
 
                 using (var libVLC = new LibVLC("--input-repeat=1000000000"))
-                using (var media = new Media(libVLC, Path.Combine("Temp", Path.GetFileName(audioFilesPath[0].AbsolutePath)), FromType.FromPath))
+                using (var media = new Media(libVLC, Path.Combine(tmpAudio, Path.GetFileName(audioFilesPath[0].AbsolutePath)), FromType.FromPath))
                 {
                     var mediaPlayer = new MediaPlayer(libVLC);
 
