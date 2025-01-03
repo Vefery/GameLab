@@ -15,6 +15,7 @@ namespace AvaloniaGame.GameLogic
     {
         public Vector3 target;
         public int depth = 6;
+        public int seed = -1;
         public bool goalSpawned = false;
         public Vector3 startPose;
         public List<Vector3> tilePositions = new();
@@ -22,12 +23,18 @@ namespace AvaloniaGame.GameLogic
         private int initDepth;
         public List<Action> roomsCreateActions = new();
         public ExitDoor exitDoor;
+        public Random rand;
 
         public Maze(GL gl) : base(gl)
         {
             startPose = Vector3.Zero;
             tilePositions.Add(startPose);
             initDepth = depth;
+            if (seed != -1)
+                rand = new(seed);
+            else
+                rand = new();
+
             rooms.Add(MainLogic.Register(new Room(gl), position));
 
             if (MainLogic.difficulty == 0)

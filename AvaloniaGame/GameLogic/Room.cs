@@ -11,7 +11,6 @@ namespace AvaloniaGame.GameLogic
         public float neighbourChance = 0.25f;
         public Room? left, right, up, down;
         private bool leftAllowed = true, rightAllowed = true, upAllowed = true, downAllowed = true;
-        private Random rand = new();
 
         public override void Start(GL gl)
         {
@@ -19,10 +18,7 @@ namespace AvaloniaGame.GameLogic
             MainLogic.Register(new CeilingPrefab(gl), position);
         }
 
-        public override void Update(float deltaTime)
-        {
-            ;
-        }
+        public override void Update(float deltaTime) {}
 
         public void Generate(Maze maze)
         {
@@ -67,7 +63,7 @@ namespace AvaloniaGame.GameLogic
             while (roomsGenerated == 0 && maze.depth > 0 && (rightAllowed || leftAllowed || upAllowed || downAllowed))
             {
                 leftAllowed = maze.CheckPosition(this.position + new Vector3(-halfWidth, 0, 0)) && left == null;
-                if (rand.NextDouble() <= neighbourChance && leftAllowed)
+                if (maze.rand.NextDouble() <= neighbourChance && leftAllowed)
                 {
                     left = MainLogic.Register(new Room(gl), position + new Vector3(-halfWidth, 0, 0));
                     maze.tilePositions.Add(this.position + new Vector3(-halfWidth, 0, 0));
@@ -75,7 +71,7 @@ namespace AvaloniaGame.GameLogic
                     roomsGenerated++;
                 }
                 rightAllowed = maze.CheckPosition(this.position + new Vector3(halfWidth, 0, 0)) && right == null;
-                if (rand.NextDouble() <= neighbourChance && rightAllowed)
+                if (maze.rand.NextDouble() <= neighbourChance && rightAllowed)
                 {
                     right = MainLogic.Register(new Room(gl), position + new Vector3(halfWidth, 0, 0));
                     maze.tilePositions.Add(this.position + new Vector3(halfWidth, 0, 0));
@@ -83,7 +79,7 @@ namespace AvaloniaGame.GameLogic
                     roomsGenerated++;
                 }
                 upAllowed = maze.CheckPosition(this.position + new Vector3(0, 0, halfWidth)) && up == null;
-                if (rand.NextDouble() <= neighbourChance && upAllowed)
+                if (maze.rand.NextDouble() <= neighbourChance && upAllowed)
                 {
                     up = MainLogic.Register(new Room(gl), position + new Vector3(0, 0, halfWidth));
                     maze.tilePositions.Add(this.position + new Vector3(0, 0, halfWidth));
@@ -91,7 +87,7 @@ namespace AvaloniaGame.GameLogic
                     roomsGenerated++;
                 }
                 downAllowed = maze.CheckPosition(this.position + new Vector3(0, 0, -halfWidth)) && down == null;
-                if (rand.NextDouble() <= neighbourChance && downAllowed)
+                if (maze.rand.NextDouble() <= neighbourChance && downAllowed)
                 {
                     down = MainLogic.Register(new Room(gl), position + new Vector3(0, 0, -halfWidth));
                     maze.tilePositions.Add(this.position + new Vector3(0, 0, -halfWidth));
