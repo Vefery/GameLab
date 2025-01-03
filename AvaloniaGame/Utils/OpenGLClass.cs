@@ -10,6 +10,7 @@ using StbImageSharp;
 using AvaloniaGame.GameLogic;
 using AvaloniaGame.Utils;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using AvaloniaGame.ViewModels;
 
 namespace AvaloniaGame.OpenGL
 {
@@ -134,7 +135,11 @@ namespace AvaloniaGame.OpenGL
         {
             var gl = GL.GetApi(aGL.GetProcAddress);
             
-            MainLogic.CallUpdate( (float) (DateTime.Now - lastTick).TotalSeconds );
+            var model = MainLogic.mainWindow.DataContext as MainViewModel; 
+            if (!model!.IsPopupVisible)
+            {
+                MainLogic.CallUpdate( (float) (DateTime.Now - lastTick).TotalSeconds );
+            }
             lastTick = DateTime.Now;
 
             gl.Viewport(0, 0, (uint)(Bounds.Width * 1.25), (uint)(Bounds.Height * 1.25));

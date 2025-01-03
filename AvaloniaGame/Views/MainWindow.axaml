@@ -4,11 +4,63 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:AvaloniaGame.Views"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        xmlns:ogl="clr-namespace:AvaloniaGame.OpenGL"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="AvaloniaGame.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="AvaloniaGame"
 		Height="720"
 		Width="1280">
-  <views:MainView x:Name="MainView"/>
+    <Grid>
+        <ogl:OpenGLClass x:Name="GameView"/>
+        <Border
+            IsVisible="{Binding IsPopupVisible}"
+            Background="#80000000"
+        >
+            <Border
+                Width="200" Height="200"
+                CornerRadius="10"
+                Background="#242424"
+            >
+                <StackPanel>
+                    <TextBlock
+                        Margin="8"
+                    >Difficulty: </TextBlock>
+                    <Border
+                        CornerRadius="10"
+                        Background="#363636"
+                        Margin="8,0"
+                    >
+                        <StackPanel
+                            Spacing="8"
+                        >
+                            <Button
+                                Margin="8,8,0,0"
+                                CornerRadius="5"
+                                Command="{Binding OnEasy}"
+                            >Easy</Button>
+                            <Button
+                                Margin="8,0,0,0"
+                                CornerRadius="5"
+                                Command="{Binding OnMedium}"
+                            >Medium</Button>
+                            <Button
+                                Margin="8,0,0,8"
+                                CornerRadius="5"
+                                Command="{Binding OnHard}"
+                            >Hard</Button>
+                        </StackPanel>
+                    </Border>
+                    <Button
+                        Margin="8"
+                        CornerRadius="5"
+                        Command="{Binding OnExit}"
+                    >Exit</Button>
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Escape" Command="{Binding OnEsc, Mode=OneWay}"/>
+    </Window.KeyBindings>
 </Window>
