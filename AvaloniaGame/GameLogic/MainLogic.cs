@@ -28,7 +28,7 @@ namespace AvaloniaGame.GameLogic
         // public static MouseState mouseState;
         public static bool finishFlag = false;
         public static int difficulty = 0;
-        public static Window mainWindow;
+        public static MainWindow mainWindow;
 
         public static void InitializeScene()
         {
@@ -51,6 +51,7 @@ namespace AvaloniaGame.GameLogic
 
             var player = InitializePlayer();
             InitializeScene();
+            mainWindow.UpdateTimer();
             return player;
         }
         public static void CallUpdate(float deltaTime)
