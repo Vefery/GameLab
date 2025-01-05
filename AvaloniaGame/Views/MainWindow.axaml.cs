@@ -35,13 +35,10 @@ public partial class MainWindow : Window
         _timeElapsed = TimeSpan.Zero;
         TimerTextBlock.Text = _timeElapsed.ToString(@"mm\:ss\.ff");
 
-        // Запускаем таймер при инициализации
-        StartTimer();
-
         // TODO: нужен захват мыши
     }
 
-    private void StartTimer()
+    public void StartTimer()
     {
         _timer = new Timer(10);
         _timer.Elapsed += OnTimerElapsed;

@@ -13,6 +13,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using AvaloniaGame.ViewModels;
 using System.Diagnostics;
 using AvaloniaGame.Views;
+using System.Threading;
 
 namespace AvaloniaGame.OpenGL
 {
@@ -49,17 +50,41 @@ namespace AvaloniaGame.OpenGL
 
         protected override void OnOpenGlInit(GlInterface aGL)
         {
+            MainLogic.InitializeNetworkManager();
+
+            if (MainLogic.isMultiplayer)
+            {
+                if (MainLogic.networkManager.isServer)
+                {
+                    //while (!MainLogic.winnerGetted)
+                    //{
+                    //    Console.WriteLine("Ждём пока не узнаем кто выиграл");
+                    //    Thread.Sleep(1000);
+                    //}
+                    //MainLogic.winnerGetted = false;
+                }
+                else
+                {
+                    while (!MainLogic.timeGetted || !MainLogic.seedGetted)
+                    {
+                        Console.WriteLine("Ждём пока сервер даст время и сид");
+                        Thread.Sleep(1000);
+                    }
+                    MainLogic.timeGetted = false;
+                    MainLogic.seedGetted = false;
+                }
+            }
+
             base.OnOpenGlInit(aGL);
             CheckError(aGL);
             var gl = GL.GetApi(aGL.GetProcAddress);
-            
+
             MainLogic.gl = gl;
             InitializeGraphics(gl);
             InitializeAudio();
-            MainLogic.InitializeNetworkManager();
             player = MainLogic.InitializePlayer();
             MainLogic.InitializeScene();
-
+            MainLogic.mainWindow.StartTimer();
             MainLogic.OnFinished += () => { 
                 player.Dispose();
                 player = null;

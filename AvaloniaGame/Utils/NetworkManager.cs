@@ -2,6 +2,7 @@
 using System.Net;
 using AvaloniaGame.GameLogic;
 using Lidgren.Network;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public class NetworkManager
 {
@@ -9,7 +10,8 @@ public class NetworkManager
     private NetServer _server;
     private NetClient _client;
     public bool isServer;
-    private NetConnection _connectedClient;
+    public bool clientConnectedToServer;
+    public NetConnection connectedClient;
 
     public NetworkManager(string appIdentifier, bool isServer)
     {
@@ -34,20 +36,26 @@ public class NetworkManager
     {
         if (!isServer)
         {
-            _client.Connect(host, port);
-            Console.WriteLine("Подключение к серверу " + host + ":" + port);
+            try
+            {
+                _client.Connect(host, port);
+            }
+            catch
+            {
+                Console.WriteLine("Не удалось подключиться к серверу");
+            }
         }
     }
 
     public void SendMessage(string message)
     {
         Console.WriteLine("MSG: " + message);
-        if (isServer && _connectedClient != null)
+        if (isServer && connectedClient != null)
         {
             // Отправка сообщения только подключенному клиенту
             var msg = _server.CreateMessage();
             msg.Write(message);
-            _connectedClient.SendMessage(msg, NetDeliveryMethod.ReliableOrdered, 0);
+            connectedClient.SendMessage(msg, NetDeliveryMethod.ReliableOrdered, 0);
         }
         else if (!isServer)
         {
@@ -73,14 +81,19 @@ public class NetworkManager
             // Обработка в зависимости от ключа
             switch (key)
             {
+                case "Connected":
+                    Console.WriteLine("Клиент подключен: ");
+                    MainLogic.networkManager.clientConnectedToServer = true;
+                    MainLogic.timeGetted = true;
+                    break;
                 case "Time":
                     Console.WriteLine("Время: " + value);
-                    AvaloniaGame.GameLogic.MainLogic.timeString = value;
+                    MainLogic.timeString = value;
                     MainLogic.timeGetted = true;
                     break;
                 case "Seed":
                     Console.WriteLine("Сид: " + value);
-                    AvaloniaGame.GameLogic.MainLogic.seedString = value;
+                    MainLogic.seedString = value;
                     MainLogic.seedGetted = true;
                     break;
                 case "Winner":
@@ -115,11 +128,12 @@ public class NetworkManager
                         if (msg.SenderConnection.Status == NetConnectionStatus.Connected)
                         {
                             Console.WriteLine("Клиент подключен: " + msg.SenderEndPoint);
-                            if (_connectedClient == null)
+                            if (connectedClient == null)
                             {
                                 // Если нет подключенного клиента, сохраняем его
-                                _connectedClient = msg.SenderConnection;
+                                connectedClient = msg.SenderConnection;
                                 Console.WriteLine("Клиент подключен: " + msg.SenderEndPoint);
+                                SendMessage("Connected: ");
                             }
                             else
                             {
@@ -131,7 +145,7 @@ public class NetworkManager
                         }
                         else if (msg.SenderConnection.Status == NetConnectionStatus.Disconnected)
                         {
-                            _connectedClient = null;
+                            connectedClient = null;
                             Console.WriteLine("Клиент отключен: " + msg.SenderEndPoint);
                         }
                         break;

@@ -68,9 +68,9 @@ namespace AvaloniaGame.GameLogic
                 {
                     Console.WriteLine("Клиентская игра запущена");
                     networkManager = new NetworkManager("game", false);
-                    networkManager.Connect("localhost", 12345); // Укажите IP-адрес сервера
                 }
                 isMultiplayer = true;
+                WaitSecondPlayerConnect();
             }
             else
             {
@@ -78,10 +78,31 @@ namespace AvaloniaGame.GameLogic
             }
 
         }
+        public static void WaitSecondPlayerConnect()
+        {
+            if (networkManager.isServer)
+            {
+                do
+                {
+                    networkManager.Update();
+                    Console.WriteLine("Ждём подключение второго игрока");
+                    Thread.Sleep(1000);
+                } while (networkManager.connectedClient == null);
+            }
+            else
+            {
+                do
+                {
+                    networkManager.Connect("localhost", 12345);
+                    networkManager.Update();
+                    Console.WriteLine("Ждём ответа от сервера");
+                    Thread.Sleep(1000);
+                } while (networkManager.clientConnectedToServer == false);
+            }
+        }
 
         public static Player ReloadLevel()
         {
-            
             gameObjects.Clear();
             
             if(isMultiplayer)
