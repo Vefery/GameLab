@@ -20,7 +20,7 @@ public partial class MainWindow : Window
     public static string assetsPath = "avares://AvaloniaGame/Assets/";
 
     private Timer _timer;
-    private TimeSpan _timeElapsed;
+    public TimeSpan _timeElapsed;
 
     public MainWindow()
     {

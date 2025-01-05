@@ -12,6 +12,7 @@ using AvaloniaGame.Utils;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using AvaloniaGame.ViewModels;
 using System.Diagnostics;
+using AvaloniaGame.Views;
 
 namespace AvaloniaGame.OpenGL
 {
@@ -30,10 +31,6 @@ namespace AvaloniaGame.OpenGL
         private Vector3 _globalAmbient;
         private Material Material;
         public Player player;
-
-        private Stopwatch stopwatch = new Stopwatch();
-
-        private NetworkManager networkManager;
         private bool LoadShader(string shaderName)
         {
             return true;
@@ -59,31 +56,14 @@ namespace AvaloniaGame.OpenGL
             MainLogic.gl = gl;
             InitializeGraphics(gl);
             InitializeAudio();
+            MainLogic.InitializeNetworkManager();
             player = MainLogic.InitializePlayer();
             MainLogic.InitializeScene();
-            stopwatch.Start();
-
-            Console.WriteLine("Вы будете хостить? y/N?");
-            if (Console.ReadLine() == "y")
-            {
-                Console.WriteLine("Серверная игра запущена");
-                networkManager = new NetworkManager("game", true);
-            }
-            else
-            {
-                Console.WriteLine("Клиентская игра запущена");
-                networkManager = new NetworkManager("game", false);
-                networkManager.Connect("localhost", 12345); // Укажите IP-адрес сервера
-            }
 
             MainLogic.OnFinished += () => { 
                 player.Dispose();
                 player = null;
-                stopwatch.Stop();
-                Console.WriteLine(stopwatch.Elapsed.TotalSeconds);
                 player = MainLogic.ReloadLevel();
-                networkManager.SendMessage("Booba");
-                stopwatch.Start();
             };
             CheckError(aGL);
         }
@@ -183,6 +163,8 @@ namespace AvaloniaGame.OpenGL
             {
                 DrawObject(gl, obj.mesh, obj.position, obj.radianRotation, Vector3.One);
             }
+            if(MainLogic.isMultiplayer)
+                MainLogic.networkManager.Update();
             RequestNextFrameRendering();
         }
 

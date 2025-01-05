@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using AvaloniaGame.GameLogic;
 using Lidgren.Network;
 
 public class NetworkManager
@@ -7,14 +8,15 @@ public class NetworkManager
     private NetPeerConfiguration _config;
     private NetServer _server;
     private NetClient _client;
-    private bool _isServer;
+    public bool isServer;
     private NetConnection _connectedClient;
+
     public NetworkManager(string appIdentifier, bool isServer)
     {
-        _isServer = isServer;
+        this.isServer = isServer;
         _config = new NetPeerConfiguration(appIdentifier);
 
-        if (_isServer)
+        if (this.isServer)
         {
             _config.Port = 12345; // Порт для сервера
             _server = new NetServer(_config);
@@ -30,7 +32,7 @@ public class NetworkManager
 
     public void Connect(string host, int port)
     {
-        if (!_isServer)
+        if (!isServer)
         {
             _client.Connect(host, port);
             Console.WriteLine("Подключение к серверу " + host + ":" + port);
@@ -39,14 +41,15 @@ public class NetworkManager
 
     public void SendMessage(string message)
     {
-        if (_isServer && _connectedClient != null)
+        Console.WriteLine("MSG: " + message);
+        if (isServer && _connectedClient != null)
         {
             // Отправка сообщения только подключенному клиенту
             var msg = _server.CreateMessage();
             msg.Write(message);
             _connectedClient.SendMessage(msg, NetDeliveryMethod.ReliableOrdered, 0);
         }
-        else if (!_isServer)
+        else if (!isServer)
         {
             // Клиент отправляет сообщение на сервер
             var msg = _client.CreateMessage();
@@ -55,9 +58,52 @@ public class NetworkManager
         }
     }
 
+    private void ProcessDataMsg(NetIncomingMessage incomingMsg)
+    {
+        string data = incomingMsg.ReadString();
+        Console.WriteLine("Получено сообщение от сервера: " + data);
+
+        // Парсинг сообщения
+        string[] parts = data.Split(new[] { ": " }, 2, StringSplitOptions.None);
+        if (parts.Length == 2)
+        {
+            string key = parts[0].Trim(); // Ключ (например, "Time", "Seed", "Win")
+            string value = parts[1].Trim(); // Значение (строка после ": ")
+
+            // Обработка в зависимости от ключа
+            switch (key)
+            {
+                case "Time":
+                    Console.WriteLine("Время: " + value);
+                    AvaloniaGame.GameLogic.MainLogic.timeString = value;
+                    MainLogic.timeGetted = true;
+                    break;
+                case "Seed":
+                    Console.WriteLine("Сид: " + value);
+                    AvaloniaGame.GameLogic.MainLogic.seedString = value;
+                    MainLogic.seedGetted = true;
+                    break;
+                case "Winner":
+                    Console.WriteLine("Победа: " + value);
+                    if (isServer && value == "server")
+                        Console.WriteLine("You won !!!");
+                    else
+                        Console.WriteLine("You lose :(");
+
+                    break;
+                default:
+                    Console.WriteLine("Неизвестный ключ: " + key);
+                    break;
+            }
+        }
+        else
+        {
+            Console.WriteLine("Неверный формат сообщения: " + data);
+        }
+    }
     public void Update()
     {
-        if (_isServer)
+        if (isServer)
         {
             // Обработка входящих сообщений на сервере
             NetIncomingMessage msg;
@@ -90,8 +136,7 @@ public class NetworkManager
                         }
                         break;
                     case NetIncomingMessageType.Data:
-                        string data = msg.ReadString();
-                        Console.WriteLine("Получено сообщение от клиента: " + data);
+                        ProcessDataMsg(msg);
                         break;
                 }
                 _server.Recycle(msg);
@@ -106,8 +151,7 @@ public class NetworkManager
                 switch (incomingMsg.MessageType)
                 {
                     case NetIncomingMessageType.Data:
-                        string data = incomingMsg.ReadString();
-                        Console.WriteLine("Получено сообщение от сервера: " + data);
+                        ProcessDataMsg(incomingMsg);
                         break;
                 }
                 _client.Recycle(incomingMsg);
