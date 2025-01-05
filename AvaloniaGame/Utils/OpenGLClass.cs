@@ -32,6 +32,8 @@ namespace AvaloniaGame.OpenGL
         public Player player;
 
         private Stopwatch stopwatch = new Stopwatch();
+
+        private NetworkManager networkManager;
         private bool LoadShader(string shaderName)
         {
             return true;
@@ -61,12 +63,26 @@ namespace AvaloniaGame.OpenGL
             MainLogic.InitializeScene();
             stopwatch.Start();
 
+            Console.WriteLine("Вы будете хостить? y/N?");
+            if (Console.ReadLine() == "y")
+            {
+                Console.WriteLine("Серверная игра запущена");
+                networkManager = new NetworkManager("game", true);
+            }
+            else
+            {
+                Console.WriteLine("Клиентская игра запущена");
+                networkManager = new NetworkManager("game", false);
+                networkManager.Connect("localhost", 12345); // Укажите IP-адрес сервера
+            }
+
             MainLogic.OnFinished += () => { 
                 player.Dispose();
                 player = null;
                 stopwatch.Stop();
                 Console.WriteLine(stopwatch.Elapsed.TotalSeconds);
                 player = MainLogic.ReloadLevel();
+                networkManager.SendMessage("Booba");
                 stopwatch.Start();
             };
             CheckError(aGL);

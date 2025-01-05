@@ -17,6 +17,7 @@ namespace AvaloniaGame.GameLogic
         public static GL gl {set; private get;}
         public static event Action? OnFinished;
         public static List<GameObject> gameObjects = [];
+
         public static List<IRenderable> renderables
         {
             get
