@@ -11,6 +11,7 @@ using AvaloniaGame.GameLogic;
 using AvaloniaGame.Utils;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using AvaloniaGame.ViewModels;
+using System.Diagnostics;
 
 namespace AvaloniaGame.OpenGL
 {
@@ -30,7 +31,7 @@ namespace AvaloniaGame.OpenGL
         private Material Material;
         public Player player;
 
-
+        private Stopwatch stopwatch = new Stopwatch();
         private bool LoadShader(string shaderName)
         {
             return true;
@@ -58,10 +59,15 @@ namespace AvaloniaGame.OpenGL
             InitializeAudio();
             player = MainLogic.InitializePlayer();
             MainLogic.InitializeScene();
+            stopwatch.Start();
+
             MainLogic.OnFinished += () => { 
                 player.Dispose();
                 player = null;
-                player = MainLogic.ReloadLevel(); 
+                stopwatch.Stop();
+                Console.WriteLine(stopwatch.Elapsed.TotalSeconds);
+                player = MainLogic.ReloadLevel();
+                stopwatch.Start();
             };
             CheckError(aGL);
         }
