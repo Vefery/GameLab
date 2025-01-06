@@ -127,14 +127,14 @@ public class NetworkManager
                     case NetIncomingMessageType.StatusChanged:
                         if (msg.SenderConnection.Status == NetConnectionStatus.Connected)
                         {
-                            Console.WriteLine("Клиент подключен: " + msg.SenderEndPoint);
                             if (connectedClient == null)
                             {
                                 // Если нет подключенного клиента, сохраняем его
                                 connectedClient = msg.SenderConnection;
                                 Console.WriteLine("Клиент подключен: " + msg.SenderEndPoint);
                                 SendMessage("Connected: ");
-                                MainLogic.ReloadLevel();
+                                MainLogic.finishFlag = true;
+                                MainLogic.CallUpdate(0);
                             }
                             else
                             {

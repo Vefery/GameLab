@@ -50,6 +50,25 @@ namespace AvaloniaGame.OpenGL
 
         protected override void OnOpenGlInit(GlInterface aGL)
         {
+
+            base.OnOpenGlInit(aGL);
+            CheckError(aGL);
+            var gl = GL.GetApi(aGL.GetProcAddress);
+
+            MainLogic.gl = gl;
+            InitializeGraphics(gl);
+            InitializeAudio();
+            player = MainLogic.InitializePlayer();
+            MainLogic.InitializeScene();
+            MainLogic.mainWindow.StartTimer();
+            MainLogic.OnFinished += () => {
+                Console.WriteLine("Event OnFinished");
+                player.Dispose();
+                player = null;
+                player = MainLogic.ReloadLevel();
+            };
+            CheckError(aGL);
+
             MainLogic.InitializeNetworkManager();
 
             if (MainLogic.isMultiplayer)
@@ -67,30 +86,16 @@ namespace AvaloniaGame.OpenGL
                 {
                     while (!MainLogic.timeGetted || !MainLogic.seedGetted)
                     {
+                        MainLogic.networkManager.Update();
                         Console.WriteLine("Ждём пока сервер даст время и сид");
                         Thread.Sleep(1000);
                     }
+                    MainLogic.finishFlag = true;
+                    MainLogic.CallUpdate(0);
                     MainLogic.timeGetted = false;
                     MainLogic.seedGetted = false;
                 }
             }
-
-            base.OnOpenGlInit(aGL);
-            CheckError(aGL);
-            var gl = GL.GetApi(aGL.GetProcAddress);
-
-            MainLogic.gl = gl;
-            InitializeGraphics(gl);
-            InitializeAudio();
-            player = MainLogic.InitializePlayer();
-            MainLogic.InitializeScene();
-            MainLogic.mainWindow.StartTimer();
-            MainLogic.OnFinished += () => { 
-                player.Dispose();
-                player = null;
-                player = MainLogic.ReloadLevel();
-            };
-            CheckError(aGL);
         }
 
         private void InitializeGraphics(GL gl)

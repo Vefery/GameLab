@@ -115,6 +115,8 @@ namespace AvaloniaGame.GameLogic
 
         public static Player ReloadLevel()
         {
+            Console.WriteLine("ReloadLevel");
+
             gameObjects.Clear();
             var player = InitializePlayer();
             InitializeScene();
@@ -128,11 +130,11 @@ namespace AvaloniaGame.GameLogic
 
             if (isMultiplayer)
             {
-                networkManager.SendMessage("Time: " + mainWindow._timeElapsed.ToString(@"mm\:ss\.ff"));
-                networkManager.SendMessage("Seed: " + seedString);
-
                 if (networkManager.isServer)
                 {
+                    networkManager.SendMessage("Time: " + mainWindow._timeElapsed.ToString(@"mm\:ss\.ff"));
+                    networkManager.SendMessage("Seed: " + seedString);
+
                     while (!winnerGetted)
                     {
                         Console.WriteLine("Ждём пока не узнаем кто выиграл");
@@ -144,9 +146,12 @@ namespace AvaloniaGame.GameLogic
                 {
                     while (!timeGetted || !seedGetted)
                     {
+                        MainLogic.networkManager.Update();
                         Console.WriteLine("Ждём пока сервер даст время и сид");
                         Thread.Sleep(1000);
                     }
+                    MainLogic.finishFlag = true;
+                    MainLogic.CallUpdate(0);
                     timeGetted = false;
                     seedGetted = false;
                 }

@@ -37,7 +37,7 @@ namespace AvaloniaGame.GameLogic
                 {
                     rand = new();
                     int curSeed = rand.Next();
-                    MainLogic.networkManager.SendMessage("Seed: " + curSeed.ToString());
+                    MainLogic.seedString = curSeed.ToString();
                     rand = new(curSeed);
                 }
                 else
