@@ -58,16 +58,15 @@ namespace AvaloniaGame.OpenGL
             MainLogic.gl = gl;
             InitializeGraphics(gl);
             InitializeAudio();
-            player = MainLogic.InitializePlayer();
-            MainLogic.InitializeScene();
-            MainLogic.mainWindow.StartTimer();
             MainLogic.OnFinished += () => {
                 Console.WriteLine("Event OnFinished");
-                player.Dispose();
+                if(player != null)
+                    player.Dispose();
                 player = null;
                 player = MainLogic.ReloadLevel();
             };
-            CheckError(aGL);
+
+            player = MainLogic.InitializePlayer();
 
             MainLogic.InitializeNetworkManager();
 
@@ -96,6 +95,11 @@ namespace AvaloniaGame.OpenGL
                     MainLogic.seedGetted = false;
                 }
             }
+            MainLogic.InitializeScene();
+            MainLogic.mainWindow.StartTimer();
+
+            CheckError(aGL);
+
         }
 
         private void InitializeGraphics(GL gl)

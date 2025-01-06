@@ -44,7 +44,7 @@ namespace AvaloniaGame.GameLogic
         }
         public static Player InitializePlayer()
         {
-            Player _player = new Player(gl, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1, 5, 1), 3, 4, 0.4f);
+            Player _player = new Player(gl, new Vector3(0.0f, 0.0f, 0.0f), new Vector3(1, 5, 1), 3, 4, 0.0f);
             mainWindow.KeyDown += _player.KeyDownHandler;
             mainWindow.KeyUp += _player.KeyUpHandler;
             mainWindow.PointerMoved += _player.PointerMovedHandler;
@@ -100,6 +100,9 @@ namespace AvaloniaGame.GameLogic
                     Console.WriteLine("Ждём подключение второго игрока");
                     Thread.Sleep(1000);
                 } while (networkManager.connectedClient == null);
+                
+                finishFlag = true;
+                CallUpdate(0);
             }
             else
             {
