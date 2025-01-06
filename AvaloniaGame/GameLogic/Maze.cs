@@ -30,10 +30,29 @@ namespace AvaloniaGame.GameLogic
             startPose = Vector3.Zero;
             tilePositions.Add(startPose);
             initDepth = depth;
-            if (seed != -1)
-                rand = new(seed);
+
+            if(MainLogic.isMultiplayer)
+            {
+                if (MainLogic.networkManager.isServer)
+                {
+                    rand = new();
+                    int curSeed = rand.Next();
+                    MainLogic.seedString = curSeed.ToString();
+                    rand = new(curSeed);
+                }
+                else
+                {
+                    int seed;
+                    if (!int.TryParse(MainLogic.seedString, out seed))
+                        Console.WriteLine("Неверный формат сида.");
+                    rand = new(seed);
+
+                }
+            }
             else
+            {
                 rand = new();
+            }
 
             rooms.Add(MainLogic.Register(new Room(gl), position));
 

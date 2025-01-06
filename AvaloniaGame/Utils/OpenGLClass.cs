@@ -11,6 +11,9 @@ using AvaloniaGame.GameLogic;
 using AvaloniaGame.Utils;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using AvaloniaGame.ViewModels;
+using System.Diagnostics;
+using AvaloniaGame.Views;
+using System.Threading;
 
 namespace AvaloniaGame.OpenGL
 {
@@ -29,8 +32,6 @@ namespace AvaloniaGame.OpenGL
         private Vector3 _globalAmbient;
         private Material Material;
         public Player player;
-
-
         private bool LoadShader(string shaderName)
         {
             return true;
@@ -49,21 +50,56 @@ namespace AvaloniaGame.OpenGL
 
         protected override void OnOpenGlInit(GlInterface aGL)
         {
+
             base.OnOpenGlInit(aGL);
             CheckError(aGL);
             var gl = GL.GetApi(aGL.GetProcAddress);
-            
+
             MainLogic.gl = gl;
             InitializeGraphics(gl);
             InitializeAudio();
-            player = MainLogic.InitializePlayer();
-            MainLogic.InitializeScene();
-            MainLogic.OnFinished += () => { 
-                player.Dispose();
+            MainLogic.OnFinished += () => {
+                Console.WriteLine("Event OnFinished");
+                if(player != null)
+                    player.Dispose();
                 player = null;
-                player = MainLogic.ReloadLevel(); 
+                player = MainLogic.ReloadLevel();
             };
+
+            player = MainLogic.InitializePlayer();
+
+            MainLogic.InitializeNetworkManager();
+
+            if (MainLogic.isMultiplayer)
+            {
+                if (MainLogic.networkManager.isServer)
+                {
+                    //while (!MainLogic.winnerGetted)
+                    //{
+                    //    Console.WriteLine("Ждём пока не узнаем кто выиграл");
+                    //    Thread.Sleep(1000);
+                    //}
+                    //MainLogic.winnerGetted = false;
+                }
+                else
+                {
+                    while (!MainLogic.timeGetted || !MainLogic.seedGetted)
+                    {
+                        MainLogic.networkManager.Update();
+                        Console.WriteLine("Ждём пока сервер даст время и сид");
+                        Thread.Sleep(1000);
+                    }
+                    MainLogic.finishFlag = true;
+                    MainLogic.CallUpdate(0);
+                    MainLogic.timeGetted = false;
+                    MainLogic.seedGetted = false;
+                }
+            }
+            MainLogic.InitializeScene();
+            MainLogic.mainWindow.StartTimer();
+
             CheckError(aGL);
+
         }
 
         private void InitializeGraphics(GL gl)
@@ -161,6 +197,8 @@ namespace AvaloniaGame.OpenGL
             {
                 DrawObject(gl, obj.mesh, obj.position, obj.radianRotation, Vector3.One);
             }
+            if(MainLogic.isMultiplayer)
+                MainLogic.networkManager.Update();
             RequestNextFrameRendering();
         }
 
