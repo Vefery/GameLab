@@ -54,34 +54,34 @@ namespace AvaloniaGame.GameLogic
 
         public static void InitializeNetworkManager()
         {
-            //Console.WriteLine("Одиночная или многопользовательская игра? m/S?");
+            Console.WriteLine("Одиночная или многопользовательская игра? m/S?");
 
-            //if(Console.ReadLine() == "m")
-            //{
-            //    Console.WriteLine("Вы будете хостить? y/N?");
-            //    if (Console.ReadLine() == "y")
-            //    {
-            //        Console.WriteLine("Серверная игра запущена");
-            //        networkManager = new NetworkManager("game", true);
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Клиентская игра запущена");
-            //        networkManager = new NetworkManager("game", false);
-            //    }
-            //    isMultiplayer = true;
-            //    WaitSecondPlayerConnect();
-            //}
-            //else
-            //{
-            //    isMultiplayer = false;
-            //}
+            if (Console.ReadLine() == "m")
+            {
+                Console.WriteLine("Вы будете хостить? y/N?");
+                if (Console.ReadLine() == "y")
+                {
+                    Console.WriteLine("Серверная игра запущена");
+                    networkManager = new NetworkManager("game", true);
+                }
+                else
+                {
+                    Console.WriteLine("Клиентская игра запущена");
+                    networkManager = new NetworkManager("game", false);
+                }
+                isMultiplayer = true;
+                WaitSecondPlayerConnect();
+            }
+            else
+            {
+                isMultiplayer = false;
+            }
             //isMultiplayer = false;
             //server debug
-            Console.WriteLine("Серверная игра запущена");
-            networkManager = new NetworkManager("game", true);
-            isMultiplayer = true;
-            WaitSecondPlayerConnect();
+            //Console.WriteLine("Серверная игра запущена");
+            //networkManager = new NetworkManager("game", true);
+            //isMultiplayer = true;
+            //WaitSecondPlayerConnect();
 
             //client debug
             //Console.WriteLine("Клиентская игра запущена");

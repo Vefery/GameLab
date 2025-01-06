@@ -96,6 +96,10 @@ public class NetworkManager
                     MainLogic.seedString = value;
                     MainLogic.seedGetted = true;
                     break;
+                case "Difficulty":
+                    Console.WriteLine("Сложность: " + value);
+                    MainLogic.difficulty = int.Parse(value);
+                    break;
                 case "Winner":
                     Console.WriteLine("Победа: " + value);
                     if (isServer && value == "server")

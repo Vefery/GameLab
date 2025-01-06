@@ -27,6 +27,7 @@ public class MainViewModel : ViewModelBase
         );
         OnEasy = ReactiveCommand.Create(
             () => {
+                MainLogic.networkManager.SendMessage("Difficulty: 0");
                 MainLogic.difficulty = 0;
                 MainLogic.finishFlag = true;
                 IsPopupVisible = false;
@@ -34,6 +35,7 @@ public class MainViewModel : ViewModelBase
         );
         OnMedium = ReactiveCommand.Create(
             () => {
+                MainLogic.networkManager.SendMessage("Difficulty: 1");
                 MainLogic.difficulty = 1;
                 MainLogic.finishFlag = true;
                 IsPopupVisible = false;
@@ -41,6 +43,7 @@ public class MainViewModel : ViewModelBase
         );
         OnHard = ReactiveCommand.Create(
             () => {
+                MainLogic.networkManager.SendMessage("Difficulty: 2");
                 MainLogic.difficulty = 2;
                 MainLogic.finishFlag = true;
                 IsPopupVisible = false;
