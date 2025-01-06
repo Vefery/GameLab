@@ -54,28 +54,40 @@ namespace AvaloniaGame.GameLogic
 
         public static void InitializeNetworkManager()
         {
-            Console.WriteLine("Одиночная или многопользовательская игра? m/S?");
+            //Console.WriteLine("Одиночная или многопользовательская игра? m/S?");
 
-            if(Console.ReadLine() == "m")
-            {
-                Console.WriteLine("Вы будете хостить? y/N?");
-                if (Console.ReadLine() == "y")
-                {
-                    Console.WriteLine("Серверная игра запущена");
-                    networkManager = new NetworkManager("game", true);
-                }
-                else
-                {
-                    Console.WriteLine("Клиентская игра запущена");
-                    networkManager = new NetworkManager("game", false);
-                }
-                isMultiplayer = true;
-                WaitSecondPlayerConnect();
-            }
-            else
-            {
-                isMultiplayer = false;
-            }
+            //if(Console.ReadLine() == "m")
+            //{
+            //    Console.WriteLine("Вы будете хостить? y/N?");
+            //    if (Console.ReadLine() == "y")
+            //    {
+            //        Console.WriteLine("Серверная игра запущена");
+            //        networkManager = new NetworkManager("game", true);
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("Клиентская игра запущена");
+            //        networkManager = new NetworkManager("game", false);
+            //    }
+            //    isMultiplayer = true;
+            //    WaitSecondPlayerConnect();
+            //}
+            //else
+            //{
+            //    isMultiplayer = false;
+            //}
+
+            //server debug
+            Console.WriteLine("Серверная игра запущена");
+            networkManager = new NetworkManager("game", true);
+            isMultiplayer = true;
+            WaitSecondPlayerConnect();
+
+            //client debug
+            //Console.WriteLine("Клиентская игра запущена");
+            //networkManager = new NetworkManager("game", false);
+            //isMultiplayer = true;
+            //WaitSecondPlayerConnect();
 
         }
         public static void WaitSecondPlayerConnect()
@@ -104,9 +116,21 @@ namespace AvaloniaGame.GameLogic
         public static Player ReloadLevel()
         {
             gameObjects.Clear();
+            var player = InitializePlayer();
+            InitializeScene();
             
-            if(isMultiplayer)
+            mainWindow.UpdateTimer();
+            return player;
+        }
+
+        public static void WaitAnswer()
+        {
+
+            if (isMultiplayer)
             {
+                networkManager.SendMessage("Time: " + mainWindow._timeElapsed.ToString(@"mm\:ss\.ff"));
+                networkManager.SendMessage("Seed: " + seedString);
+
                 if (networkManager.isServer)
                 {
                     while (!winnerGetted)
@@ -126,16 +150,10 @@ namespace AvaloniaGame.GameLogic
                     timeGetted = false;
                     seedGetted = false;
                 }
-
-                networkManager.SendMessage("Time: " + mainWindow._timeElapsed.ToString(@"mm\:ss\.ff"));
             }
 
-            var player = InitializePlayer();
-            InitializeScene();
-            
-            mainWindow.UpdateTimer();
-            return player;
         }
+
         public static void CallUpdate(float deltaTime)
         {
             if (finishFlag)

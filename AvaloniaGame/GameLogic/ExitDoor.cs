@@ -26,6 +26,7 @@ namespace AvaloniaGame.GameLogic
             {
                 AudioDoor.PlayAudio(looped: false);
                 MainLogic.finishFlag = true;
+                MainLogic.WaitAnswer();
             }
         }
 

@@ -134,6 +134,7 @@ public class NetworkManager
                                 connectedClient = msg.SenderConnection;
                                 Console.WriteLine("Клиент подключен: " + msg.SenderEndPoint);
                                 SendMessage("Connected: ");
+                                MainLogic.ReloadLevel();
                             }
                             else
                             {
