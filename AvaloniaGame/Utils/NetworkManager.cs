@@ -102,7 +102,7 @@ public class NetworkManager
                         Console.WriteLine("You won !!!");
                     else
                         Console.WriteLine("You lose :(");
-
+                    MainLogic.winnerGetted = true;
                     break;
                 default:
                     Console.WriteLine("Неизвестный ключ: " + key);

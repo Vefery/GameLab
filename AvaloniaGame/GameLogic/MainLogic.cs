@@ -76,7 +76,7 @@ namespace AvaloniaGame.GameLogic
             //{
             //    isMultiplayer = false;
             //}
-
+            //isMultiplayer = false;
             //server debug
             Console.WriteLine("Серверная игра запущена");
             networkManager = new NetworkManager("game", true);
@@ -140,6 +140,7 @@ namespace AvaloniaGame.GameLogic
 
                     while (!winnerGetted)
                     {
+                        MainLogic.networkManager.Update();
                         Console.WriteLine("Ждём пока не узнаем кто выиграл");
                         Thread.Sleep(1000);
                     }
@@ -170,7 +171,8 @@ namespace AvaloniaGame.GameLogic
                 finishFlag = false;
                 return;
             }
-            foreach (var gameObject in gameObjects)
+            var tmpCopy = new List<GameObject>(gameObjects);
+            foreach (var gameObject in tmpCopy)
                 gameObject.Update(deltaTime);
         }
 
