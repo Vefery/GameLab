@@ -7,18 +7,28 @@ namespace AvaloniaGame.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    public string Greeting => "Hello world!";
-
     private bool _isPopupVisible = false;
     private bool _isWaiting = false;
     private bool _isMenuVisible = true;
     private bool _isMultiplayerMenuVisible = false;
     private bool _isDifficultyMenuVisible = false;
+    private bool _isFinishScreenVisible = false;
     private bool _isMultiplayer;
+    private string _finishText;
+    private bool _isHost;
 
+    public string FinishText
+    {
+        get => _finishText;
+        set => this.RaiseAndSetIfChanged(ref _finishText, value);
+    }
     public bool IsPopupVisible {
         get => _isPopupVisible;
-        set => this.RaiseAndSetIfChanged(ref _isPopupVisible, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _isPopupVisible, value);
+            MainLogic.mainWindow.pauseTimer = value;
+        }
     }
     public bool IsWaiting
     {
@@ -40,9 +50,23 @@ public class MainViewModel : ViewModelBase
         get => _isDifficultyMenuVisible;
         set => this.RaiseAndSetIfChanged(ref _isDifficultyMenuVisible, value);
     }
+    public bool IsFinishScreenVisible
+    {
+        get => _isFinishScreenVisible;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _isFinishScreenVisible, value);
+            MainLogic.mainWindow.pauseTimer = value;
+        }
+    }
+    public bool IsHost
+    {
+        get => _isHost;
+        set => this.RaiseAndSetIfChanged(ref _isHost, value);
+    }
     public bool IsPause
     {
-        get => IsWaiting || IsMenuVisible || IsMultiplayerMenuVisible || IsPopupVisible || IsDifficultyMenuVisible;
+        get => IsWaiting || IsMenuVisible || IsMultiplayerMenuVisible || IsPopupVisible || IsDifficultyMenuVisible || IsFinishScreenVisible;
     }
     public ICommand OnEsc { get; private set; }
 
@@ -54,6 +78,7 @@ public class MainViewModel : ViewModelBase
     public ICommand OnMultiplayer {  get; private set; }
     public ICommand OnClient { get; private set; }
     public ICommand OnHost {  get; private set; }
+    public ICommand OnRestart { get; private set; }
     public MainViewModel()
     {
         OnEsc = ReactiveCommand.Create(
@@ -126,6 +151,7 @@ public class MainViewModel : ViewModelBase
         OnHost = ReactiveCommand.Create(
             () =>
             {
+                IsHost = true;
                 IsMultiplayerMenuVisible = false;
                 IsDifficultyMenuVisible = true;
             }
@@ -133,9 +159,17 @@ public class MainViewModel : ViewModelBase
         OnClient = ReactiveCommand.Create(
             () =>
             {
+                IsHost = false;
                 IsMultiplayerMenuVisible = false;
                 IsWaiting = true;
                 MainLogic.StartMultiplayer(false);
+            }
+        );
+        OnRestart = ReactiveCommand.Create(
+            () =>
+            {
+                IsFinishScreenVisible = false;
+                MainLogic.networkManager.SendMessage("Restart: ");
             }
         );
     }

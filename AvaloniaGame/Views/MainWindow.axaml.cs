@@ -20,6 +20,7 @@ public partial class MainWindow : Window
     public static string assetsPath = "avares://AvaloniaGame/Assets/";
 
     private Timer _timer;
+    public bool pauseTimer = false;
     public TimeSpan _timeElapsed;
 
     public MainWindow()
@@ -47,6 +48,8 @@ public partial class MainWindow : Window
 
     private void OnTimerElapsed(object sender, ElapsedEventArgs e)
     {
+        if (pauseTimer)
+            return;
         _timeElapsed = _timeElapsed.Add(TimeSpan.FromMilliseconds(10));
         Dispatcher.UIThread.InvokeAsync(() =>
         {
@@ -61,5 +64,4 @@ public partial class MainWindow : Window
         _timeElapsed = TimeSpan.Zero; // Сброс таймера
         TimerTextBlock.Text = _timeElapsed.ToString(@"mm\:ss\.ff");
     }
-
 }

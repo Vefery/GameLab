@@ -66,14 +66,17 @@ namespace AvaloniaGame.GameLogic
 
                         if (comparisonResult < 0)
                         {
+                            (MainLogic.mainWindow.DataContext as MainViewModel).FinishText = "You won !!!";
+                            (MainLogic.mainWindow.DataContext as MainViewModel).IsFinishScreenVisible = true;
                             Console.WriteLine($"Время клиента ({curTime}) меньше чем время сервера ({MainLogic.timeString})");
                             MainLogic.networkManager.SendMessage("Winner: client");
                         }
                         else if (comparisonResult > 0)
                         {
+                            (MainLogic.mainWindow.DataContext as MainViewModel).FinishText = "You lost :(";
+                            (MainLogic.mainWindow.DataContext as MainViewModel).IsFinishScreenVisible = true;
                             Console.WriteLine($"Время клиента ({curTime}) больше чем время сервера ({MainLogic.timeString})");
                             MainLogic.networkManager.SendMessage("Winner: server");
-
                         }
                         else
                         {
@@ -88,7 +91,6 @@ namespace AvaloniaGame.GameLogic
                 else
                 {
                     MainLogic.finishFlag = true;
-                    MainLogic.WaitAnswer();
                 }
             }
         }

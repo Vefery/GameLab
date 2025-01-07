@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
 using AvaloniaGame.GameLogic;
+using AvaloniaGame.ViewModels;
+using AvaloniaGame.Views;
 using Lidgren.Network;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -86,6 +88,11 @@ public class NetworkManager
                     MainLogic.networkManager.clientConnectedToServer = true;
                     MainLogic.timeGetted = true;
                     break;
+                case "Restart":
+                    MainLogic.WaitAnswer();
+                    (MainLogic.mainWindow.DataContext as MainViewModel).IsFinishScreenVisible = false;
+                    (MainLogic.mainWindow.DataContext as MainViewModel).IsWaiting = true;
+                    break;
                 case "Time":
                     Console.WriteLine("Время: " + value);
                     MainLogic.timeString = value;
@@ -102,11 +109,14 @@ public class NetworkManager
                     break;
                 case "Winner":
                     Console.WriteLine("Победа: " + value);
+                    var context = MainLogic.mainWindow.DataContext as MainViewModel;
                     if (isServer && value == "server")
-                        Console.WriteLine("You won !!!");
+                        context.FinishText = "You won !!!";
                     else
-                        Console.WriteLine("You lose :(");
+                        context.FinishText = "You lost :(";
                     MainLogic.winnerGetted = true;
+                    context.IsWaiting = false;
+                    context.IsFinishScreenVisible = true;
                     break;
                 default:
                     Console.WriteLine("Неизвестный ключ: " + key);

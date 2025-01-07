@@ -24,6 +24,8 @@
                    Margin="10"
                    Text="00:00:00" />
 
+		
+		
 		<!--Пауза-->
 		<Border
             IsVisible="{Binding IsPopupVisible}"
@@ -178,6 +180,42 @@
 						<TextBlock Foreground="Gray" FontSize="30">Yes</TextBlock>
 					</Button>
 				</Panel>
+			</Border>
+		</Border>
+
+		<!--Экран конца игры-->
+		<Border
+            IsVisible="{Binding IsFinishScreenVisible}"
+            Background="#80000000">
+			<Border
+                Width="230" Height="170"
+                CornerRadius="10"
+                Background="#242424">
+				<StackPanel Spacing="8">
+					<TextBlock
+						Margin="8"
+						HorizontalAlignment="Center"
+						Foreground="White"
+						FontSize="30"
+						Text="{Binding FinishText}"></TextBlock>
+					<Button
+                        Margin="8,8,8,8"
+                        CornerRadius="5"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Bottom"
+						IsVisible="{Binding IsHost}"
+                        Command="{Binding OnRestart}">
+						<TextBlock Foreground="Gray">Again</TextBlock>
+					</Button>
+					<Button
+                        Margin="8,8,8,8"
+                        CornerRadius="5"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Bottom"
+                        Command="{Binding OnExit}">
+						<TextBlock Foreground="Gray">Exit</TextBlock>
+					</Button>
+				</StackPanel>
 			</Border>
 		</Border>
 	</Grid>

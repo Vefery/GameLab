@@ -27,6 +27,7 @@ namespace AvaloniaGame.GameLogic
         public static string winnerString;
         public static bool winnerGetted;
         public static bool isMultiplayer;
+        public static string finishText;
         public static List<IRenderable> renderables
         {
             get
@@ -66,16 +67,7 @@ namespace AvaloniaGame.GameLogic
             isMultiplayer = true;
             WaitSecondPlayerConnect();
             finishFlag = true;
-            if (MainLogic.networkManager.isServer)
-            {
-                //while (!MainLogic.winnerGetted)
-                //{
-                //    Console.WriteLine("Ждём пока не узнаем кто выиграл");
-                //    Thread.Sleep(1000);
-                //}
-                //MainLogic.winnerGetted = false;
-            }
-            else
+            if (!networkManager.isServer)
             {
                 WaitAnswer();
             }
