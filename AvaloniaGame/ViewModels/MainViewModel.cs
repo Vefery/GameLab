@@ -13,6 +13,8 @@ public class MainViewModel : ViewModelBase
     private bool _isWaiting = false;
     private bool _isMenuVisible = true;
     private bool _isMultiplayerMenuVisible = false;
+    private bool _isDifficultyMenuVisible = false;
+    private bool _isMultiplayer;
 
     public bool IsPopupVisible {
         get => _isPopupVisible;
@@ -33,9 +35,14 @@ public class MainViewModel : ViewModelBase
         get => _isMultiplayerMenuVisible;
         set => this.RaiseAndSetIfChanged(ref _isMultiplayerMenuVisible, value);
     }
+    public bool IsDifficultyMenuVisible
+    {
+        get => _isDifficultyMenuVisible;
+        set => this.RaiseAndSetIfChanged(ref _isDifficultyMenuVisible, value);
+    }
     public bool IsPause
     {
-        get => IsWaiting || IsMenuVisible || IsMultiplayerMenuVisible || IsPopupVisible;
+        get => IsWaiting || IsMenuVisible || IsMultiplayerMenuVisible || IsPopupVisible || IsDifficultyMenuVisible;
     }
     public ICommand OnEsc { get; private set; }
 
@@ -54,29 +61,47 @@ public class MainViewModel : ViewModelBase
         );
         OnEasy = ReactiveCommand.Create(
             () => {
-                if (MainLogic.isMultiplayer)
-                    MainLogic.networkManager.SendMessage("Difficulty: 0");
                 MainLogic.difficulty = 0;
-                MainLogic.finishFlag = true;
-                IsPopupVisible = false;
+                if (_isMultiplayer)
+                {
+                    IsWaiting = true;
+                    MainLogic.StartMultiplayer(true);
+                    MainLogic.networkManager.SendMessage("Difficulty: 0");
+                }
+                else
+                    MainLogic.StartSingleplayer();
+
+                IsDifficultyMenuVisible = false;
             }
         );
         OnMedium = ReactiveCommand.Create(
             () => {
-                if(MainLogic.isMultiplayer)
-                    MainLogic.networkManager.SendMessage("Difficulty: 1");
                 MainLogic.difficulty = 1;
-                MainLogic.finishFlag = true;
-                IsPopupVisible = false;
+                if (_isMultiplayer)
+                {
+                    IsWaiting = true;
+                    MainLogic.StartMultiplayer(true);
+                    MainLogic.networkManager.SendMessage("Difficulty: 1");
+                }
+                else
+                    MainLogic.StartSingleplayer();
+
+                IsDifficultyMenuVisible = false;
             }
         );
         OnHard = ReactiveCommand.Create(
             () => {
-                if (MainLogic.isMultiplayer)
-                    MainLogic.networkManager.SendMessage("Difficulty: 2");
                 MainLogic.difficulty = 2;
-                MainLogic.finishFlag = true;
-                IsPopupVisible = false;
+                if (_isMultiplayer)
+                {
+                    IsWaiting = true;
+                    MainLogic.StartMultiplayer(true);
+                    MainLogic.networkManager.SendMessage("Difficulty: 2");
+                }
+                else
+                    MainLogic.StartSingleplayer();
+
+                IsDifficultyMenuVisible = false;
             }
         );
         OnExit = ReactiveCommand.Create(
@@ -86,7 +111,8 @@ public class MainViewModel : ViewModelBase
             () =>
             {
                 IsMenuVisible = false;
-                MainLogic.StartSingleplayer();
+                IsDifficultyMenuVisible = true;
+                _isMultiplayer = false;
             }
         );
         OnMultiplayer = ReactiveCommand.Create(
@@ -94,14 +120,14 @@ public class MainViewModel : ViewModelBase
             {
                 IsMenuVisible = false;
                 IsMultiplayerMenuVisible = true;
+                _isMultiplayer = true;
             }
         );
         OnHost = ReactiveCommand.Create(
             () =>
             {
                 IsMultiplayerMenuVisible = false;
-                IsWaiting = true;
-                MainLogic.StartMultiplayer(true);
+                IsDifficultyMenuVisible = true;
             }
         );
         OnClient = ReactiveCommand.Create(

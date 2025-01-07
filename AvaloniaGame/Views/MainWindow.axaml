@@ -23,16 +23,43 @@
                    VerticalAlignment="Top"
                    Margin="10"
                    Text="00:00:00" />
-		
+
+		<!--Пауза-->
 		<Border
             IsVisible="{Binding IsPopupVisible}"
             Background="#80000000">
+			<Border
+                Width="200" Height="100"
+                CornerRadius="10"
+                Background="#242424">
+				<Panel>
+					<TextBlock 
+						Margin="8" 
+						HorizontalAlignment="Center"
+						Foreground="Gray"
+						FontSize="30">Pause</TextBlock>
+					<Button
+                        Margin="8,8,8,8"
+                        CornerRadius="5"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Bottom"
+                        Command="{Binding OnExit}">
+						<TextBlock Foreground="Gray">Exit</TextBlock>
+					</Button>
+				</Panel>
+			</Border>
+		</Border>
+		
+		<!--Меню сложности-->
+		<Border
+            IsVisible="{Binding IsDifficultyMenuVisible}"
+            Background="Black">
 			<Border
                 Width="200" Height="200"
                 CornerRadius="10"
                 Background="#242424">
 				<StackPanel>
-					<TextBlock Margin="8">Difficulty: </TextBlock>
+					<TextBlock Margin="8" Foreground="Gray">Difficulty: </TextBlock>
 					<Border
                         CornerRadius="10"
                         Background="#363636"
@@ -41,21 +68,29 @@
 							<Button
                                 Margin="8,8,0,0"
                                 CornerRadius="5"
-                                Command="{Binding OnEasy}">Easy</Button>
+                                Command="{Binding OnEasy}">
+								<TextBlock Foreground="Gray">Easy</TextBlock>
+							</Button>
 							<Button
                                 Margin="8,0,0,0"
                                 CornerRadius="5"
-                                Command="{Binding OnMedium}">Medium</Button>
+                                Command="{Binding OnMedium}">
+								<TextBlock Foreground="Gray">Medium</TextBlock>
+							</Button>
 							<Button
                                 Margin="8,0,0,8"
                                 CornerRadius="5"
-                                Command="{Binding OnHard}">Hard</Button>
+                                Command="{Binding OnHard}">
+								<TextBlock Foreground="Gray">Hard</TextBlock>
+							</Button>
 						</StackPanel>
 					</Border>
 					<Button
                         Margin="8"
                         CornerRadius="5"
-                        Command="{Binding OnExit}">Exit</Button>
+                        Command="{Binding OnExit}">
+						<TextBlock Foreground="Gray">Exit</TextBlock>
+					</Button>
 				</StackPanel>
 			</Border>
 		</Border>
@@ -70,6 +105,7 @@
 					   FontSize="60">Wait...</TextBlock>
 		</Border>
 
+		<!--Главое меню-->
 		<Border
 			IsVisible="{Binding IsMenuVisible}"
 			Background="Black">
@@ -107,6 +143,7 @@
 			</Border>
 		</Border>
 
+		<!--Меню мультиплеера-->
 		<Border
 			IsVisible="{Binding IsMultiplayerMenuVisible}"
 			Background="Black">
