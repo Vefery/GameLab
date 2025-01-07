@@ -10,6 +10,8 @@ using AvaloniaGame.Views;
 using Avalonia.Controls;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
+using AvaloniaGame.ViewModels;
 
 namespace AvaloniaGame.GameLogic
 {
@@ -90,7 +92,35 @@ namespace AvaloniaGame.GameLogic
             //WaitSecondPlayerConnect();
 
         }
-        public static void WaitSecondPlayerConnect()
+        public static void StartSingleplayer()
+        {
+            finishFlag = true;
+            isMultiplayer = false;
+            //InitializeScene();
+            mainWindow.StartTimer();
+        }
+        public static void StartMultiplayer(bool isHost)
+        {
+            networkManager = new NetworkManager("game", isHost);
+            isMultiplayer = true;
+            WaitSecondPlayerConnect();
+            finishFlag = true;
+            if (MainLogic.networkManager.isServer)
+            {
+                //while (!MainLogic.winnerGetted)
+                //{
+                //    Console.WriteLine("Ждём пока не узнаем кто выиграл");
+                //    Thread.Sleep(1000);
+                //}
+                //MainLogic.winnerGetted = false;
+            }
+            else
+            {
+                WaitAnswer();
+            }
+            mainWindow.StartTimer();
+        }
+        public static async void WaitSecondPlayerConnect()
         {
             if (networkManager.isServer)
             {
@@ -98,11 +128,12 @@ namespace AvaloniaGame.GameLogic
                 {
                     networkManager.Update();
                     Console.WriteLine("Ждём подключение второго игрока");
-                    Thread.Sleep(1000);
+                    //Thread.Sleep(1000);
+                    await Task.Delay(1000);
                 } while (networkManager.connectedClient == null);
-                
+
+                (mainWindow.DataContext as MainViewModel).IsWaiting = false;
                 finishFlag = true;
-                CallUpdate(0);
             }
             else
             {
@@ -111,7 +142,8 @@ namespace AvaloniaGame.GameLogic
                     networkManager.Connect("localhost", 12345);
                     networkManager.Update();
                     Console.WriteLine("Ждём ответа от сервера");
-                    Thread.Sleep(1000);
+                    //Thread.Sleep(1000);
+                    await Task.Delay(1000);
                 } while (networkManager.clientConnectedToServer == false);
             }
         }
@@ -128,7 +160,7 @@ namespace AvaloniaGame.GameLogic
             return player;
         }
 
-        public static void WaitAnswer()
+        public static async void WaitAnswer()
         {
 
             if (isMultiplayer)
@@ -142,8 +174,10 @@ namespace AvaloniaGame.GameLogic
                     {
                         MainLogic.networkManager.Update();
                         Console.WriteLine("Ждём пока не узнаем кто выиграл");
-                        Thread.Sleep(1000);
+                        //Thread.Sleep(1000);
+                        await Task.Delay(1000);
                     }
+                    (mainWindow.DataContext as MainViewModel).IsWaiting = false;
                     winnerGetted = false;
                 }
                 else
@@ -152,10 +186,11 @@ namespace AvaloniaGame.GameLogic
                     {
                         MainLogic.networkManager.Update();
                         Console.WriteLine("Ждём пока сервер даст время и сид");
-                        Thread.Sleep(1000);
+                        //Thread.Sleep(1000);
+                        await Task.Delay(1000);
                     }
                     MainLogic.finishFlag = true;
-                    MainLogic.CallUpdate(0);
+                    (mainWindow.DataContext as MainViewModel).IsWaiting = false;
                     timeGetted = false;
                     seedGetted = false;
                 }

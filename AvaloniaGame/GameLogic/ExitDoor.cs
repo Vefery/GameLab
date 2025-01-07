@@ -6,6 +6,7 @@ using Silk.NET.OpenGL;
 using AvaloniaGame.Utils;
 using AvaloniaGame.Views;
 using System;
+using AvaloniaGame.ViewModels;
 
 namespace AvaloniaGame.GameLogic
 {
@@ -57,6 +58,7 @@ namespace AvaloniaGame.GameLogic
                 AudioDoor.PlayAudio(looped: false);
                 if(MainLogic.isMultiplayer)
                 {
+                    (MainLogic.mainWindow.DataContext as MainViewModel).IsWaiting = true;
                     if (!MainLogic.networkManager.isServer)
                     {
                         string curTime = MainLogic.mainWindow._timeElapsed.ToString(@"mm\:ss\.ff");

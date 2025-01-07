@@ -68,7 +68,7 @@ namespace AvaloniaGame.OpenGL
 
             player = MainLogic.InitializePlayer();
 
-            MainLogic.InitializeNetworkManager();
+            /*MainLogic.InitializeNetworkManager();
 
             if (MainLogic.isMultiplayer)
             {
@@ -96,7 +96,7 @@ namespace AvaloniaGame.OpenGL
                 }
             }
             MainLogic.InitializeScene();
-            MainLogic.mainWindow.StartTimer();
+            MainLogic.mainWindow.StartTimer();*/
 
             CheckError(aGL);
 
@@ -172,7 +172,7 @@ namespace AvaloniaGame.OpenGL
             var gl = GL.GetApi(aGL.GetProcAddress);
             
             var model = MainLogic.mainWindow.DataContext as MainViewModel; 
-            if (!model!.IsPopupVisible)
+            if (!model!.IsPause)
             {
                 MainLogic.CallUpdate( (float) (DateTime.Now - lastTick).TotalSeconds );
             }
