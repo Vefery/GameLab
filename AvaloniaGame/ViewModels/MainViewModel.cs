@@ -13,6 +13,7 @@ public class MainViewModel : ViewModelBase
     private bool _isMultiplayerMenuVisible = false;
     private bool _isDifficultyMenuVisible = false;
     private bool _isFinishScreenVisible = false;
+    private bool _isConnectMenuVisible = false;
     private bool _isMultiplayer;
     private string _finishText;
     private bool _isHost;
@@ -64,6 +65,11 @@ public class MainViewModel : ViewModelBase
         get => _isHost;
         set => this.RaiseAndSetIfChanged(ref _isHost, value);
     }
+    public bool IsConnectMenuVisible
+    {
+        get => _isConnectMenuVisible;
+        set => this.RaiseAndSetIfChanged(ref _isConnectMenuVisible, value);
+    }
     public bool IsPause
     {
         get => IsWaiting || IsMenuVisible || IsMultiplayerMenuVisible || IsPopupVisible || IsDifficultyMenuVisible || IsFinishScreenVisible;
@@ -77,6 +83,7 @@ public class MainViewModel : ViewModelBase
     public ICommand OnSingleplayer { get; private set; }
     public ICommand OnMultiplayer {  get; private set; }
     public ICommand OnClient { get; private set; }
+    public ICommand OnConnect { get; private set; }
     public ICommand OnHost {  get; private set; }
     public ICommand OnRestart { get; private set; }
     public MainViewModel()
@@ -90,7 +97,7 @@ public class MainViewModel : ViewModelBase
                 if (_isMultiplayer)
                 {
                     IsWaiting = true;
-                    MainLogic.StartMultiplayer(true);
+                    MainLogic.StartMultiplayerAsHost();
                     MainLogic.networkManager.SendMessage("Difficulty: 0");
                 }
                 else
@@ -105,7 +112,7 @@ public class MainViewModel : ViewModelBase
                 if (_isMultiplayer)
                 {
                     IsWaiting = true;
-                    MainLogic.StartMultiplayer(true);
+                    MainLogic.StartMultiplayerAsHost();
                     MainLogic.networkManager.SendMessage("Difficulty: 1");
                 }
                 else
@@ -120,7 +127,7 @@ public class MainViewModel : ViewModelBase
                 if (_isMultiplayer)
                 {
                     IsWaiting = true;
-                    MainLogic.StartMultiplayer(true);
+                    MainLogic.StartMultiplayerAsHost();
                     MainLogic.networkManager.SendMessage("Difficulty: 2");
                 }
                 else
@@ -161,8 +168,15 @@ public class MainViewModel : ViewModelBase
             {
                 IsHost = false;
                 IsMultiplayerMenuVisible = false;
+                IsConnectMenuVisible = true;
+            }
+        );
+        OnConnect = ReactiveCommand.Create(
+            (string ip) =>
+            {
+                IsConnectMenuVisible = false;
                 IsWaiting = true;
-                MainLogic.StartMultiplayer(false);
+                MainLogic.StartMultiplayerAsClient(ip);
             }
         );
         OnRestart = ReactiveCommand.Create(

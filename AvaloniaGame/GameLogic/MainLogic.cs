@@ -61,9 +61,22 @@ namespace AvaloniaGame.GameLogic
             isMultiplayer = false;
             mainWindow.StartTimer();
         }
-        public static void StartMultiplayer(bool isHost)
+        public static void StartMultiplayerAsHost()
         {
-            networkManager = new NetworkManager("game", isHost);
+            networkManager = new NetworkManager("game", true);
+            isMultiplayer = true;
+            WaitSecondPlayerConnect();
+            finishFlag = true;
+            if (!networkManager.isServer)
+            {
+                WaitAnswer();
+            }
+            mainWindow.StartTimer();
+        }
+        public static void StartMultiplayerAsClient(string ipAdress)
+        {
+            networkManager = new NetworkManager("game", false);
+            networkManager.serverIp = ipAdress;
             isMultiplayer = true;
             WaitSecondPlayerConnect();
             finishFlag = true;
@@ -92,7 +105,7 @@ namespace AvaloniaGame.GameLogic
             {
                 do
                 {
-                    networkManager.Connect("localhost", 12345);
+                    networkManager.Connect(networkManager.serverIp, 12345);
                     networkManager.Update();
                     Console.WriteLine("Ждём ответа от сервера");
                     //Thread.Sleep(1000);

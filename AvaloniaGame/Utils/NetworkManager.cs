@@ -14,6 +14,7 @@ public class NetworkManager
     public bool isServer;
     public bool clientConnectedToServer;
     public NetConnection connectedClient;
+    public string serverIp;
 
     public NetworkManager(string appIdentifier, bool isServer)
     {

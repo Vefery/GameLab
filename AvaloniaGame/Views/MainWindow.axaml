@@ -9,8 +9,8 @@
         x:Class="AvaloniaGame.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="AvaloniaGame"
-        Height="720"
-        Width="1280">
+        Height="600"
+        Width="800">
 	<Grid>
 		<ogl:OpenGLClass x:Name="GameView"/>
 
@@ -214,6 +214,32 @@
 						VerticalAlignment="Bottom"
                         Command="{Binding OnExit}">
 						<TextBlock Foreground="Gray">Exit</TextBlock>
+					</Button>
+				</StackPanel>
+			</Border>
+		</Border>
+	
+	<!--Экран коннекта-->
+		<Border
+            IsVisible="{Binding IsConnectMenuVisible}"
+            Background="Black">
+			<Border
+                Width="230" Height="100"
+                CornerRadius="10"
+                Background="#242424">
+				<StackPanel Spacing="8">
+					<TextBox
+						Margin="8,8,8,8"
+						Watermark="IP adress"
+						Name="ipAdress">
+					</TextBox>
+					<Button
+                        Margin="8,8,8,8"
+                        CornerRadius="5"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Bottom"
+                        Command="{Binding OnConnect}" CommandParameter="{Binding #ipAdress.Text}">
+						<TextBlock Foreground="Gray">Connect</TextBlock>
 					</Button>
 				</StackPanel>
 			</Border>
